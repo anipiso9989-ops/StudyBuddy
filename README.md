@@ -30,3 +30,10 @@ Cards and habits save in your browser. Export JSON backups regularly, especially
 **Offline use**
 
 The core tools, fonts, Markdown renderer, and math support are embedded. Spotify, streamed ambient sounds, and remote background URLs require internet. Timer settings, custom backgrounds, and music selections last for the current page session and reset after reloading.
+
+***
+
+StudyBuddy is a combination of these 3 GitHub repos, also by me:
+1) https://github.com/anipiso9989-ops/habit-tracker/
+2) https://github.com/anipiso9989-ops/adagio
+3) https://github.com/anipiso9989-ops/flashcard-app

@@ -1,7 +1,7 @@
 
 **StudyBuddy**
 
-StudyBuddy combines flashcards, daily habits, and a Pomodoro timer in one self-contained HTML workspace. A persistent sidebar switches between the three tools without interrupting your current study session.
+StudyBuddy combines flashcards, daily habits, a schedule optimizer, and a Pomodoro timer in one self-contained HTML workspace. A persistent sidebar switches between the three tools without interrupting your current study session.
 
 **Getting started**
 

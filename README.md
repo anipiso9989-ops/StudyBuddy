@@ -19,6 +19,10 @@ Add daily habits, mark them complete, and track consecutive day streaks. Undo to
 
 Set work duration, break duration, and cycle count. Start, pause, resume, or reset your session. The timer continues when you switch tools. Choose an image or GIF background, use a direct image URL, restore the default image, or switch to a plain background. Ambient recordings include rain, fireplace, river, thunderstorm, crickets, and birds. An optional Spotify player accepts supported Spotify links.
 
+**Slot**
+
+Optimize your schedule by inputting your fixed time commitments, your tasks, and priorities. 
+
 **Keyboard shortcuts**
 
 Use `Alt+1`, `Alt+2`, and `Alt+3` to switch tools. During flashcard review, press Space to reveal an answer, then use Left or Right Arrow to grade it.
@@ -34,6 +38,7 @@ The core tools, fonts, Markdown renderer, and math support are embedded. Spotify
 ***
 
 StudyBuddy is a combination of these 3 GitHub repos, also by me:
-1) https://github.com/anipiso9989-ops/habit-tracker/
+1) https://github.com/anipiso9989-ops/habits
 2) https://github.com/anipiso9989-ops/adagio
-3) https://github.com/anipiso9989-ops/flashcard-app
+3) https://github.com/anipiso9989-ops/flashcards
+4) https://github.com/anipiso9989-ops/slot

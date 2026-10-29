@@ -18,18 +18,6 @@ Add daily habits, mark them complete, and track consecutive-day streaks. Undo to
 
 Set work duration, break duration, and cycle count. Start, pause, resume, or reset your session. The timer continues when you switch tools. Choose an image or GIF background, use a direct image URL, restore the default image, or switch to a plain background. Ambient recordings include rain, fireplace, river, thunderstorm, crickets, and birds. An optional Spotify player accepts supported Spotify links and remembers your selection after reload.
 
-### Spotify in Tempo
-
-Choose **Add Spotify** in Focus, paste a full `open.spotify.com` link or Spotify URI for a song, playlist, album, artist, episode, or show, and select **Load**. Open shortened `spotify.link` URLs first to copy their full link.
-
-- Links are saved in the same browser profile and file location. Restoring a link does not automatically start playback.
-- **Settings → Spotify → Remember my Spotify link** controls persistence. Turn it off to start blank on future visits while keeping the current session's music; turn it on to save the current selection.
-- **Clear player** in Settings or **Remove player** in music options stops playback and forgets the saved link. The player remains blank after reload until you add music again.
-- The rounded 152px player keeps Spotify's native controls visible and adds a separate **Play/Pause** button through Spotify's official iFrame API. If the API is blocked, use the native player controls.
-- A small wave follows active playback and stops on pause or buffering. Reduced-motion preferences are respected. This indicates playback, not amplitude or beats; Spotify's embed does not expose audio samples.
-
-No developer account, API keys, or OAuth setup is required. Spotify controls playback availability and previews; use **Open in Spotify** when necessary. Storage restrictions or clearing site data can prevent or erase saved links; Spotify settings report storage failures. StudyBuddy and standalone Tempo use separate Spotify preferences. Switching workspace tools keeps music playing.
-
 ## Slot
 
 Plan a day or the next seven days. Add tasks with assigned dates, durations, deadlines, and priorities, then generate schedules around usable hours and fixed commitments. Open any day from the Week view, reuse hours across the week, and complete or skip work blocks. Tasks stay on their assigned dates; unfinished work can be pushed to tomorrow.

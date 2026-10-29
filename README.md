@@ -16,7 +16,19 @@ Add daily habits, mark them complete, and track consecutive-day streaks. Undo to
 
 ## Tempo
 
-Set work duration, break duration, and cycle count. Start, pause, resume, or reset your session. The timer continues when you switch tools. Choose an image or GIF background, use a direct image URL, restore the default image, or switch to a plain background. Ambient recordings include rain, fireplace, river, thunderstorm, crickets, and birds. An optional Spotify player accepts supported Spotify links.
+Set work duration, break duration, and cycle count. Start, pause, resume, or reset your session. The timer continues when you switch tools. Choose an image or GIF background, use a direct image URL, restore the default image, or switch to a plain background. Ambient recordings include rain, fireplace, river, thunderstorm, crickets, and birds. An optional Spotify player accepts supported Spotify links and remembers your selection after reload.
+
+### Spotify in Tempo
+
+Choose **Add Spotify** in Focus, paste a full `open.spotify.com` link or Spotify URI for a song, playlist, album, artist, episode, or show, and select **Load**. Open shortened `spotify.link` URLs first to copy their full link.
+
+- Links are saved in the same browser profile and file location. Restoring a link does not automatically start playback.
+- **Settings → Spotify → Remember my Spotify link** controls persistence. Turn it off to start blank on future visits while keeping the current session's music; turn it on to save the current selection.
+- **Clear player** in Settings or **Remove player** in music options stops playback and forgets the saved link. The player remains blank after reload until you add music again.
+- The rounded 152px player keeps Spotify's native controls visible and adds a separate **Play/Pause** button through Spotify's official iFrame API. If the API is blocked, use the native player controls.
+- A small wave follows active playback and stops on pause or buffering. Reduced-motion preferences are respected. This indicates playback, not amplitude or beats; Spotify's embed does not expose audio samples.
+
+No developer account, API keys, or OAuth setup is required. Spotify controls playback availability and previews; use **Open in Spotify** when necessary. Storage restrictions or clearing site data can prevent or erase saved links; Spotify settings report storage failures. StudyBuddy and standalone Tempo use separate Spotify preferences. Switching workspace tools keeps music playing.
 
 ## Slot
 
@@ -32,7 +44,7 @@ Flashcards, habits, and Slot save in your browser. Export JSON backups regularly
 
 ## Offline use
 
-The core tools, fonts, Markdown renderer, and math support are embedded. Spotify, streamed ambient sounds, and remote background URLs require internet. Focus settings, custom backgrounds, and music selections last for the current page session and reset after reloading.
+The core tools, fonts, Markdown renderer, and math support are embedded. Spotify, streamed ambient sounds, and remote background URLs require internet. Focus timer settings, custom backgrounds, and ambient selections last for the current page session and reset after reloading. Spotify links persist unless you clear the player or turn off **Remember my Spotify link**.
 
 ---
 
@@ -42,3 +54,4 @@ StudyBuddy combines these four GitHub projects, also by me:
 2. [Tempo](https://github.com/anipiso9989-ops/tempo)
 3. [Flashcards](https://github.com/anipiso9989-ops/flashcards)
 4. [Slot](https://github.com/anipiso9989-ops/slot)
+

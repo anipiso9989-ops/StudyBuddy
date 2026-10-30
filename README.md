@@ -24,7 +24,7 @@ Plan a day or the next seven days. Add tasks with assigned dates, durations, dea
 
 ## Keyboard shortcuts
 
-Use `Alt+1`, `Alt+2`, `Alt+3`, and `Alt+4` to switch to Flashcards, Habits, Focus, and Slot. During flashcard review, press Space to reveal an answer, then use Left or Right Arrow to grade it.
+Use `Alt+1`, `Alt+2`, `Alt+3`, and `Alt+4` to switch to Flashcards, Habits, Focus, and Slot. During flashcard review in Study or Cram, press Space or use **Show Answer / Show Front** to flip between the front and back as often as needed. With the answer visible, use Left or Right Arrow to grade it.
 
 ## Saving and backups
 

@@ -8,7 +8,7 @@ Download `StudyBuddy.html` and open it in a modern browser. No installation, acc
 
 ## Flashcards
 
-Create named decks and enter one card per line using `front::back`. Both sides support Markdown and mathematical notation. Edit cards, rename decks, or delete either as needed. **Study** reviews due cards using spaced repetition, while **Cram** practices every card without changing its review schedule.
+Create named decks and enter one card per line using `front::back`. Both sides support Markdown and mathematical notation. Edit cards, rename decks, or delete either as needed. Use **Export** in a deck's toolbar to download just that deck as a JSON backup, including its cards and review progress. **Study** reviews due cards using spaced repetition, while **Cram** practices every card without changing its review schedule.
 
 ## Habits
 

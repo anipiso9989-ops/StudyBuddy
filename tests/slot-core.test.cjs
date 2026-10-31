@@ -28,11 +28,11 @@ for (const file of ['Slot/Slot.html', 'StudyBuddy.html']) {
     await C.dispatch(db,`/api/tasks/${id}/checklist/1`,'PATCH',{done:true});
     assert.equal(JSON.stringify(db.blocks),before);
     C.updateTask(db,id,{name:'Life admin',checklist:[{id:1,text:'Book dentist',done:true},{id:3,text:'Call bank',done:false}]});
-    assert.equal(db.tasks[0].name,'Checklist Block');
+    assert.equal(db.tasks[0].name,'Life admin');
     assert.equal(db.blocks.filter(b=>b.task_id===id).length,1);
     const legacy = JSON.parse(JSON.stringify(db));legacy.tasks[0].name='Old checklist';legacy.blocks[0].task_name='Old checklist';
     const restored = C.validateDatabase(legacy);
-    assert.equal(restored.tasks[0].name,'Checklist Block');assert.equal(restored.blocks[0].task_name,'Checklist Block');
+    assert.equal(restored.tasks[0].name,'Old checklist');assert.equal(restored.blocks[0].task_name,'Old checklist');
     assert.equal(restored.tasks[0].checklist[0].text,'Book dentist');
     assert.equal(restored.tasks[0].checklist[0].done,true);
     C.setBlockStatus(db,blocks[0].id,'completed');
@@ -40,6 +40,43 @@ for (const file of ['Slot/Slot.html', 'StudyBuddy.html']) {
     assert.equal(db.tasks[0].checklist[1].done,false); // Time and checklist progress are independent.
     db.blocks[0].task_name='Historical label';
     assert.equal(C.validateDatabase(db).blocks[0].task_name,'Historical label');
+  });
+  test(`${file}: fetch and edit every task field across dates; delete and restore safely`, async () => {
+    const db=C.empty(),id=C.addTask(db,task());
+    await C.planDay(db,'2026-11-02');
+    const patch={name:'Revised',duration:90,priority:'high',energy:'shallow',min_chunk:15,max_chunk:45,target_date:'2026-11-04',deadline:'2026-11-04 16:00'};
+    await C.dispatch(db,`/api/tasks/${id}`,'PATCH',patch);
+    const fetched=await C.dispatch(db,`/api/tasks/${id}`);
+    for(const [key,value] of Object.entries(patch))assert.equal(fetched[key],value,key);
+    assert.equal(fetched.completed_minutes,0);assert.equal(fetched.remaining_minutes,90);
+    assert.equal(db.blocks.length,0);assert.equal(C.snapshot(db,'2026-11-02').tasks.length,0);
+    C.updateTask(db,id,{kind:'checklist',checklist:[{id:1,text:'Item',done:true}]});
+    assert.equal(db.tasks[0].name,'Revised');assert.equal(db.tasks[0].min_chunk,90);
+    await C.planDay(db,'2026-11-04');assert.equal(db.blocks.length,1);
+    C.deleteTask(db,id);assert.equal(db.blocks.length,0);
+    assert.equal(C.snapshot(db,'2026-11-04').tasks.length,0);
+    assert.equal((await C.dispatch(db,'/api/upcoming?after=2026-11-01')).length,0);
+    await assert.rejects(C.dispatch(db,`/api/tasks/${id}`),/Task not found/);
+    C.restoreTask(db,id);assert.equal(db.tasks[0].checklist[0].done,true);
+    C.updateTask(db,id,{kind:'timed',min_chunk:30,max_chunk:45});
+    assert.equal(db.tasks[0].checklist.length,0);
+    assert.doesNotThrow(()=>C.validateDatabase(db));
+  });
+  test(`${file}: completed and skipped tasks remain editable without losing history`, async () => {
+    const db=C.empty(),id=C.addTask(db,task({duration:60,min_chunk:30,max_chunk:30}));
+    await C.planDay(db,'2026-11-02');
+    C.setBlockStatus(db,db.blocks[0].id,'completed');C.setBlockStatus(db,db.blocks[1].id,'skipped');
+    const history=JSON.stringify(db.blocks);
+    C.updateTask(db,id,{name:'After progress',target_date:'2026-11-03',deadline:'2026-11-03 17:00'});
+    assert.equal(JSON.stringify(db.blocks),history);
+    const fetched=await C.dispatch(db,`/api/tasks/${id}`);assert.equal(fetched.completed_minutes,30);assert.equal(fetched.remaining_minutes,30);
+    assert.throws(()=>C.updateTask(db,id,{duration:29}),/already completed/);
+    await C.planDay(db,'2026-11-03');C.setTaskStatus(db,id,'completed');
+    C.updateTask(db,id,{name:'Finished rename'});assert.equal(db.tasks[0].status,'completed');
+    const completed=JSON.stringify(db.blocks);
+    C.deleteTask(db,id);assert.equal(JSON.stringify(db.blocks),completed);
+    C.restoreTask(db,id);C.updateTask(db,id,{duration:90});assert.equal(db.tasks[0].status,'planned');
+    assert.equal(C.completedMinutes(db,id),60);assert.doesNotThrow(()=>C.validateDatabase(db));
   });
   test(`${file}: a checklist block stays unslotted when only fragmented time is available`, async () => {
     const db=C.empty();C.setWindows(db,'2026-11-02',[[540,570],[600,630]]);

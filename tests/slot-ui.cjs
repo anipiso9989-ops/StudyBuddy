@@ -45,8 +45,9 @@ const server=http.createServer((req,res)=>{
   await page.reload();await notice('Ready.');await day('2026-11-02');
   assert.equal(await q('#timeline [data-check-item="1"]').isChecked(),true);
   await q('#timeline [data-edit]').click();
-  assert.equal(await q('#edit-form [name=name]').isVisible(),false);
-  assert.equal(await q('#edit-form [name=name]').isDisabled(),true);
+  await q('#edit-dialog').waitFor({state:'visible'});
+  assert.equal(await q('#edit-form [name=name]').isVisible(),true);
+  assert.equal(await q('#edit-form [name=name]').isDisabled(),false);
   await q('#checklist-editor .checklist-editor-row').nth(0).locator('input[type=text]').fill('Book dentist checkup');
   await q('#checklist-editor .checklist-editor-row').nth(1).locator('button').click();
   await q('#add-checklist-item').click();await q('#checklist-editor .checklist-editor-row').last().locator('input[type=text]').fill('Pay bill');

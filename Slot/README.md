@@ -20,7 +20,7 @@ The result is an actionable schedule built around real constraints.
 - **Recurring commitments:** Reserve fixed time on selected weekdays, every weekday, or every day; edit every property or delete the entire series.
 - **Custom working hours:** Define multiple usable windows per day.
 - **Progress tracking:** Complete or skip scheduled blocks.
-- **Task management:** Edit, delete, restore, and reschedule work.
+- **Task management:** Edit every task setting or delete tasks directly from schedules, Week previews, Upcoming, Tasks, and skipped history; restore deleted work from Trash.
 - **JSON backups:** Export and restore application data.
 
 ## Getting Started
@@ -61,11 +61,11 @@ Tasks can also be entered in bulk using comma-separated fields.
 
 ### Checklist Blocks
 
-Choose **Checklist block** in the **Task type** menu. The task name field disappears and the block is automatically named **Checklist Block**. Choose its total duration and enter one to-do per line. The name field returns when you select **Timed task**. Checklist block names are also fixed when editing. You can also create an empty block and add its items later. Individual items never require duration estimates. Timed tasks and checklist blocks can coexist on the same day.
+Choose **Checklist block** in the **Task type** menu. The task name field disappears and the block starts as **Checklist Block**. Choose its total duration and enter one to-do per line. The name field returns when you select **Timed task**. After creation, **Edit** lets you rename checklist blocks too. You can also create an empty block and add its items later. Individual items never require duration estimates. Timed tasks and checklist blocks can coexist on the same day.
 
 The scheduler places a checklist block as one uninterrupted reservation around the same hours, deadlines, priorities, and commitments as normal tasks. Chunk settings apply to timed tasks only. If the block cannot fit, it remains visibly unslotted.
 
-Check or uncheck items directly in **Your schedule** or **Tasks**. **Edit checklist** lets you add, rename, remove, and check items, and edit the block's other properties. Checkmarks save immediately in the schedule and Tasks view; changes inside the edit dialog save with **Save changes**. They survive reloads, regeneration, skipping, pushing unfinished work to tomorrow, and Trash restoration.
+Check or uncheck items directly in **Your schedule** or **Tasks**. **Edit** lets you add, rename, remove, and check items, and edit the block's other properties. Checkmarks save immediately in the schedule and Tasks view; changes inside the edit dialog save with **Save changes**. They survive reloads, regeneration, skipping, pushing unfinished work to tomorrow, and Trash restoration.
 
 Item progress and time progress are independent: checking the last item does not record the block's minutes as completed, and completing a block does not check its remaining items. Use the block's **Complete** control to record its scheduled time.
 
@@ -103,9 +103,19 @@ Scheduled blocks can be marked completed or skipped.
 
 Completed blocks remain part of the historical record and are protected from subsequent scheduling changes.
 
-You can push unfinished work to tomorrow, edit tasks, or regenerate schedules after changing availability.
+### Editing and Deleting Any Task
 
-Deleted tasks move into Trash and can be restored.
+Use **Edit** or **Delete** beside a task in the day schedule, Week preview, Tasks list, Upcoming list, or skipped-block history. These controls work for timed tasks and checklist blocks, whether unscheduled, scheduled, skipped, partially completed, or completed. If a Week preview is shortened, **Open day** provides access to the rest of that day's tasks.
+
+**Edit** opens the same dialog everywhere. Change the name, task type, assigned date, total duration, deadline, priority, energy, minimum/maximum chunks for timed tasks, or checklist items and their checkmarks. Checklist blocks always reserve one uninterrupted block, so their chunk limits follow their remaining duration. **Save changes** persists the edit while keeping your selected date and view; **Cancel** discards the draft. Upcoming tasks can be edited directly even when their date is outside the displayed week.
+
+Renaming or editing checklist items keeps planned blocks. Changes to timing, type, priority, energy, or chunk limits clear affected unfinished schedules; generate the day or week again to apply them. Moving a task preserves completed and skipped history on its original dates.
+
+Completed tasks can still be edited or deleted. Their recorded work keeps its original times and labels. Total duration cannot be reduced below completed minutes; increasing a completed task's duration reopens its remaining work. Use the existing Complete, Skip, and Restore controls to manage task progress.
+
+**Delete** is also available inside the edit dialog. It removes unfinished scheduled blocks and moves the task to **Tasks → Trash**. **Restore task** returns it with its saved properties and checklist progress; completed history remains available throughout. Generate a schedule again to place restored unfinished work.
+
+You can also push unfinished work to tomorrow or regenerate schedules after changing availability.
 
 The dashboard displays scheduled minutes, usable minutes, daily utilization, and unslotted work.
 
@@ -126,3 +136,7 @@ Slot emphasizes constraint-aware planning over decorative calendar management.
 Its dark interface, clear typography, task controls, and compact timeline support deliberate daily execution.
 
 **Planning is valuable only when the resulting schedule is realistic enough to execute.**
+
+## Validation
+
+Run `node --test tests/slot-core.test.cjs` from the repository root for planner, task lifecycle, backup, and bundled/standalone parity checks. With Playwright and Chromium available, run `node tests/slot-ui.cjs` and `node tests/slot-task-ui.cjs` to exercise both apps, including editing/deleting across views, completed history, restoration, persistence, and mobile layout. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for a custom Chromium executable.

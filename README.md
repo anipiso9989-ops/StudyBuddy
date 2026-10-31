@@ -22,6 +22,10 @@ Set work duration, break duration, and cycle count. Start, pause, resume, or res
 
 Plan a day or the next seven days. Add tasks with assigned dates, durations, deadlines, and priorities, then generate schedules around usable hours and fixed commitments. Open any day from the Week view, reuse hours across the week, and complete or skip work blocks. Tasks stay on their assigned dates; unfinished work can be pushed to tomorrow.
 
+Choose **Checklist block** under **Task type** to reserve one uninterrupted block for small tasks whose individual durations are unknown. Set the block's total duration and enter one to-do per line; no per-item estimates are needed. Check items directly in the schedule or Tasks view, and use **Edit checklist** to add, rename, remove, or check items. Checkmarks save independently of completing the time block and survive reloads, regeneration, and moving unfinished work.
+
+Under **Settings → Fixed commitments**, enable **Repeat weekly** and check the weekday tiles, or choose **Weekdays** or **Every day**. The commitment repeats from its Starts date at the same local time and duration, including overnight commitments. Recurring commitments remain available in Settings on every date. **Edit** changes the name, start date/time, end date/time, and repeat days for the whole series; **Delete series** removes it entirely. Turn off repetition to make it a one-off. Regenerate schedules after commitment changes; completed work remains protected.
+
 ## Keyboard shortcuts
 
 Use `Alt+1`, `Alt+2`, `Alt+3`, and `Alt+4` to switch to Flashcards, Habits, Focus, and Slot. During flashcard review in Study or Cram, press Space or use **Show Answer / Show Front** to flip between the front and back as often as needed. With the answer visible, use Left or Right Arrow to grade it.
@@ -29,6 +33,8 @@ Use `Alt+1`, `Alt+2`, `Alt+3`, and `Alt+4` to switch to Flashcards, Habits, Focu
 ## Saving and backups
 
 Flashcards, habits, and Slot save in your browser. Export JSON backups regularly, especially before moving devices, clearing browser storage, or importing data. Each tool uses its own compatible backup format. Importing replaces that tool's current data. Slot's backup controls are under **Settings → Backups & storage**.
+
+Slot backups include checklist items, checkmarks, and recurring commitments and work between the current standalone Slot and StudyBuddy apps. Existing backups and saved one-off commitments still load.
 
 ## Offline use
 
@@ -39,3 +45,7 @@ The core tools, fonts, Markdown renderer, and math support are embedded. Spotify
 You can download the individual apps from this repository as well, if you want to use them separately. 
 
 Use **Hide** between **Cram** and **Add Cards** to check cards to exclude from Study, Cram, and spaced repetition, press **Enter** to finish, and restore cards individually by unchecking them in Hide mode or all at once with **Unhide All**.
+
+## Validation
+
+Run `node --test tests/slot-core.test.cjs` for planner, backup, and standalone/bundled parity checks. With Playwright and Chromium available, run `node tests/slot-ui.cjs` for browser checks of both apps, including checklist editing, recurrence, backups, and mobile layout. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` if using a custom Chromium executable.

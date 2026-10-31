@@ -91,6 +91,7 @@ label{display:block;font-size:11px;color:#aaa;margin:0 0 16px}input,select,texta
 @media(max-width:390px){main{padding:22px 14px}.metrics{grid-template-columns:1fr}.metric{display:flex;justify-content:space-between;flex-direction:row-reverse;align-items:center;padding:8px 0;border-bottom:1px solid #282828}.metric span{margin:0;font-size:9px}.metric strong{font-size:22px}.legend{display:none}.fields{grid-template-columns:1fr}.slot{grid-template-columns:1fr}.slot time{font-size:10px}.slot time br{display:none}.view-button{padding-inline:9px}}
 .week-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}.week-card{margin:0;display:flex;flex-direction:column;padding:19px}.week-card .row{align-items:flex-start;gap:8px}.week-card h3{font-size:14px}.week-date{display:block;font-size:10px;color:#999;margin-top:2px}.week-card p{font-size:10px;color:#999;line-height:1.8;margin:12px 0}.week-card .week-warning{color:#e9b6ae;margin:0 0 10px}.week-events{list-style:none;padding:0;margin:0 0 18px;flex:1}.week-events li{display:flex;align-items:baseline;gap:10px;border-top:1px solid #292929;padding:9px 0;font-size:11px;overflow-wrap:anywhere}.week-events li span{min-width:0}.week-events time{flex:none;font-size:9px;color:#999;font-variant-numeric:tabular-nums}.week-events .week-more{color:#999;font-size:10px}.week-card>button{width:100%;margin-top:auto}.check-label{display:flex;align-items:center;gap:10px;margin:16px 0 0}.check-label input{width:16px;min-height:16px;height:16px;flex:none;margin:0;accent-color:#ededed}#week-range{margin:5px 0 0}.week-card .pill{font-size:9px}.week-card:has(.week-today){border-color:#666}@media(max-width:650px){.week-grid{grid-template-columns:1fr}.day-heading #plan-week{flex:1}.view-button{padding-inline:8px;font-size:10px;white-space:nowrap}.week-card{padding:17px}}
 .date-controls{display:flex;align-items:center;gap:8px;min-width:0}.upcoming-tasks{list-style:none;margin:8px 0 0;padding:0}.upcoming-tasks li{font-size:11px;color:#aaa;overflow-wrap:anywhere;padding:4px 0}.upcoming-tasks time{color:#eee}.upcoming-tasks small{white-space:nowrap}@media(max-width:650px){.date-controls{width:100%}.date-controls .day-label{flex:1;min-width:0;gap:8px}.date-controls .day-label input{min-width:0;max-width:none}.date-controls>button{flex:none}}
+.repeat-days{border:0;padding:0;margin:16px 0 20px;min-width:0}.repeat-days legend{font-size:11px;color:#aaa;margin-bottom:10px}.weekday-choices{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.weekday{position:relative;margin:0;text-align:center;cursor:pointer}.weekday input{position:absolute;opacity:0;width:100%;height:100%;margin:0;min-height:0;cursor:pointer}.weekday span{display:block;padding:10px 0;border:1px solid #444;border-radius:4px;font-size:10px}.weekday input:checked+span{background:#eee;color:#111;border-color:#eee}.weekday input:focus-visible+span{outline:2px solid #ccc;outline-offset:3px}.block-checklist{margin:12px 0;padding:0;list-style:none}.block-checklist .check-label{margin:9px 0;align-items:flex-start;color:#ddd;overflow-wrap:anywhere}.block-checklist input:checked+span{text-decoration:line-through;color:#888}.checklist-editor-row{display:flex;gap:8px;align-items:center;margin:10px 0}.checklist-editor-row input[type=checkbox]{width:16px;height:16px;min-height:16px;flex:none;margin:0;accent-color:#eee}.checklist-editor-row input[type=text]{flex:1;margin:0}.checklist-editor-row button{flex:none;padding:8px}.checklist-progress{font-size:10px;color:#aaa;margin:12px 0 0}[hidden]{display:none!important}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important}}
 </style>
 <div class="sb-content" tabindex="-1"><main>
@@ -100,10 +101,11 @@ label{display:block;font-size:11px;color:#aaa;margin:0 0 16px}input,select,texta
 <section id="slot-day" class="slot-view" aria-label="Day">
 <div class="day-heading"><div><h2 id="selected-day-title">Your day, at a glance</h2><button class="text-button" data-slot-view="settings" id="hours-summary">09:00–17:00 · Edit hours</button></div><div class="actions"><button id="plan" class="primary">Generate schedule →</button><details class="more-actions"><summary aria-label="More day actions">More</summary><div class="more-menu"><button id="refresh">Refresh day</button><button id="push">Push unfinished to tomorrow →</button></div></details></div></div>
 <div class="day-grid"><aside><section class="panel add-panel"><h2>Add a task</h2><form id="task-form">
+<label>Task type<select name="kind"><option value="timed">Timed task</option><option value="checklist">Checklist block</option></select></label>
 <label>Task name<input name="name" required maxlength="200" placeholder="What needs your attention?"></label>
 <div class="fields"><label>Plan for<input name="target_date" type="date" required aria-describedby="plan-ahead-hint"></label><label>Duration · minutes<input name="duration" type="number" min="1" max="1440" value="60" required></label></div>
-<p class="hint" id="plan-ahead-hint">Choose any future date. Tasks are saved even before you generate a schedule.</p><label>Deadline · local time<input name="deadline" type="datetime-local" required></label>
-<details id="task-options"><summary>Advanced options</summary><div class="fields"><label>Priority<select name="priority"><option>high</option><option selected>medium</option><option>low</option></select></label><label class="wide">Energy<select name="energy"><option value="deep">Deep · focused work</option><option value="shallow">Shallow · lighter work</option></select></label><label>Minimum chunk · minutes<input name="min_chunk" type="number" min="1" max="1440" value="25" required></label><label>Maximum chunk · minutes<input name="max_chunk" type="number" min="1" max="1440" value="60" required></label></div>
+<p class="hint" id="plan-ahead-hint">Choose any future date. Tasks are saved even before you generate a schedule.</p><div data-checklist-fields hidden><label>To-do list · one item per line<textarea name="checklist_text" maxlength="40200" placeholder="Reply to messages&#10;Book an appointment&#10;Send the invoice"></textarea></label><p class="hint">Choose the total time for this block. Individual items need no time estimates. You can add or edit items later.</p></div><label>Deadline · local time<input name="deadline" type="datetime-local" required></label>
+<details id="task-options"><summary>Advanced options</summary><div class="fields"><label>Priority<select name="priority"><option>high</option><option selected>medium</option><option>low</option></select></label><label class="wide">Energy<select name="energy"><option value="deep">Deep · focused work</option><option value="shallow">Shallow · lighter work</option></select></label><label data-chunk-field>Minimum chunk · minutes<input name="min_chunk" type="number" min="1" max="1440" value="25" required></label><label data-chunk-field>Maximum chunk · minutes<input name="max_chunk" type="number" min="1" max="1440" value="60" required></label></div>
 </details><button class="primary" type="submit">Add task</button></form></section><p class="hint aside-hint">1. Add your tasks.<br>2. Set your hours in Settings.<br>3. Generate your schedule.</p></aside><div><section class="panel load-panel"><div class="metrics"><div class="metric"><strong id="load">0%</strong><span>Day filled</span></div><div class="metric"><strong id="scheduled">0 / 0m</strong><span>Scheduled / usable</span></div><div class="metric"><strong id="unslotted">0m</strong><span>Unslotted work</span></div></div><div class="bar" role="progressbar" aria-label="Daily load" aria-valuemin="0" aria-valuemax="100" id="loadbar"><div id="loadfill"></div></div><p class="hint" id="load-detail"></p></section><section class="panel schedule-panel"><div class="row"><h2>Your schedule</h2><span class="legend"><span><i aria-hidden="true"></i>Deep</span><span><i class="outline" aria-hidden="true"></i>Shallow</span></span></div><div id="timeline" class="timeline"></div></section><button class="text-button" data-slot-view="tasks">Manage tasks, history &amp; trash →</button></div></div>
 </section>
 <section id="slot-week" class="slot-view" aria-label="Week" hidden>
@@ -112,19 +114,21 @@ label{display:block;font-size:11px;color:#aaa;margin:0 0 16px}input,select,texta
 <div id="week-days" class="week-grid"></div>
 </section>
 <section id="slot-tasks" class="slot-view" aria-label="Tasks" hidden><section class="panel"><div class="row"><h2>Tasks <span class="muted" id="task-count"></span></h2><button class="quiet" data-slot-view="day" data-add-task>Add a task →</button></div><div id="tasks"></div></section><section class="panel"><details id="upcoming-details"><summary>Upcoming <span id="upcoming-count"></span></summary><p class="hint">Unfinished tasks after today, grouped by date. Open a day to add more or generate its schedule.</p><div id="upcoming"></div></details></section><section class="panel"><details><summary>Paste multiple tasks</summary><p class="hint">One task per line. Use quotes around names containing commas. Optional last two fields: 25m, 60m.</p><form id="bulk-form"><label>Task name, duration, priority, deadline, energy<textarea id="bulk" required placeholder="Read chapter, 60m, high, 2026-10-01 17:00, deep"></textarea></label><button type="submit">Import all tasks</button></form></details></section><section class="panel" id="history-panel" hidden><details><summary>Skipped blocks</summary><div id="history"></div></details></section><section class="panel"><details id="trash-details"><summary>Trash <span id="trash-count"></span></summary><p class="hint">Deleted tasks leave the task list and cannot be scheduled or pushed. Completed history remains. Restore returns a task to its saved date.</p><div id="trash"></div></details></section></section>
-<section id="slot-settings" class="slot-view" aria-label="Settings" hidden><div class="settings-heading"><h2>Day settings</h2><p class="hint">Hours apply to the date selected above.</p></div><div class="settings-grid"><div><section class="panel"><h2>Usable hours</h2><p class="hint">Applies to this date. Add separate windows for a split day. End may be 24:00. No windows means a day off.</p><form id="windows-form"><div id="windows"></div><label class="check-label"><input id="week-hours" type="checkbox">Use these hours for all 7 days</label><p class="hint" id="week-hours-range"></p><div class="actions"><button id="add-window" type="button" class="quiet">+ Window</button><button type="submit">Save hours</button></div></form></section><section class="panel" id="storage-panel"><details><summary>Backups &amp; storage</summary><p class="hint">Moving from standalone Slot? Export a JSON backup there, then restore it here. All dates, tasks, commitments, and history are supported.</p><p class="hint">Saved in this browser only. Keep this HTML at the same path and use the same browser profile. Export regularly and before moving the file or clearing browser data.</p><div class="actions"><button id="export-data" type="button">Export backup</button><button id="import-data" type="button">Restore backup</button></div><input id="backup-file" type="file" accept=".json,application/json" hidden><p class="hint" id="storage-status" role="status"></p></details></section></div><div><section class="panel"><h2>Fixed commitments</h2><details><summary>Add a commitment</summary><form id="commitment-form"><label>Name<input name="name" required maxlength="200" placeholder="Meeting, meal, appointment…"></label><label>Starts<input name="start" type="datetime-local" required></label><label>Ends<input name="end" type="datetime-local" required></label><button type="submit">Add commitment</button></form></details><div id="commitments"></div></section></div></div></section>
+<section id="slot-settings" class="slot-view" aria-label="Settings" hidden><div class="settings-heading"><h2>Day settings</h2><p class="hint">Hours apply to the date selected above.</p></div><div class="settings-grid"><div><section class="panel"><h2>Usable hours</h2><p class="hint">Applies to this date. Add separate windows for a split day. End may be 24:00. No windows means a day off.</p><form id="windows-form"><div id="windows"></div><label class="check-label"><input id="week-hours" type="checkbox">Use these hours for all 7 days</label><p class="hint" id="week-hours-range"></p><div class="actions"><button id="add-window" type="button" class="quiet">+ Window</button><button type="submit">Save hours</button></div></form></section><section class="panel" id="storage-panel"><details><summary>Backups &amp; storage</summary><p class="hint">Moving from standalone Slot? Export a JSON backup there, then restore it here. All dates, tasks, commitments, and history are supported.</p><p class="hint">Saved in this browser only. Keep this HTML at the same path and use the same browser profile. Export regularly and before moving the file or clearing browser data.</p><div class="actions"><button id="export-data" type="button">Export backup</button><button id="import-data" type="button">Restore backup</button></div><input id="backup-file" type="file" accept=".json,application/json" hidden><p class="hint" id="storage-status" role="status"></p></details></section></div><div><section class="panel"><h2>Fixed commitments</h2><details><summary>Add a commitment</summary><form id="commitment-form"><label>Name<input name="name" required maxlength="200" placeholder="Meeting, meal, appointment…"></label><label>Starts<input name="start" type="datetime-local" required></label><label>Ends<input name="end" type="datetime-local" required></label><label class="check-label"><input name="repeat" type="checkbox">Repeat weekly</label><fieldset class="repeat-days" data-repeat-days hidden disabled><legend>Repeat on</legend><div class="weekday-choices"><label class="weekday"><input type="checkbox" name="weekday" value="1" aria-label="Monday"><span aria-hidden="true">Mon</span></label><label class="weekday"><input type="checkbox" name="weekday" value="2" aria-label="Tuesday"><span aria-hidden="true">Tue</span></label><label class="weekday"><input type="checkbox" name="weekday" value="3" aria-label="Wednesday"><span aria-hidden="true">Wed</span></label><label class="weekday"><input type="checkbox" name="weekday" value="4" aria-label="Thursday"><span aria-hidden="true">Thu</span></label><label class="weekday"><input type="checkbox" name="weekday" value="5" aria-label="Friday"><span aria-hidden="true">Fri</span></label><label class="weekday"><input type="checkbox" name="weekday" value="6" aria-label="Saturday"><span aria-hidden="true">Sat</span></label><label class="weekday"><input type="checkbox" name="weekday" value="0" aria-label="Sunday"><span aria-hidden="true">Sun</span></label></div><div class="actions"><button class="quiet" type="button" data-repeat-preset="weekdays">Weekdays</button><button class="quiet" type="button" data-repeat-preset="daily">Every day</button></div><p class="hint">Repeats from the Starts date on your selected days, at the same local time and duration. For overnight commitments, set Ends to the following date. Editing or deleting applies to the entire series.</p></fieldset><button type="submit">Add commitment</button></form></details><p class="hint">One-off commitments for this date and all recurring commitments. Repeat rules remain available to edit on every date.</p><div id="commitments"></div></section></div></div></section>
 <footer>Saved on this device · Local times · Regenerate after scheduling changes.</footer>
 </main><dialog id="edit-dialog" aria-labelledby="edit-title"><h2 id="edit-title">Edit task</h2>
 <form id="edit-form"><input name="id" type="hidden">
+<label>Task type<select name="kind"><option value="timed">Timed task</option><option value="checklist">Checklist block</option></select></label>
 <label>Name<input name="name" required maxlength="200"></label>
+<div data-checklist-fields hidden><h3>To-do list</h3><div id="checklist-editor"></div><button type="button" class="quiet" id="add-checklist-item">+ Item</button><p class="hint">Items have no time estimates. Checkmarks save independently of block completion.</p></div>
 <div class="fields"><label>Assigned date<input name="target_date" type="date" required></label><label>Total duration · minutes<input name="duration" type="number" min="1" max="1440" required></label></div>
 <label>Deadline<input name="deadline" type="datetime-local" required></label>
 <div class="fields"><label>Priority<select name="priority"><option>high</option><option>medium</option><option>low</option></select></label><label>Energy<select name="energy"><option>deep</option><option>shallow</option></select></label>
-<label>Minimum chunk · minutes<input name="min_chunk" type="number" min="1" max="1440" required></label><label>Maximum chunk · minutes<input name="max_chunk" type="number" min="1" max="1440" required></label></div>
+<label data-chunk-field>Minimum chunk · minutes<input name="min_chunk" type="number" min="1" max="1440" required></label><label data-chunk-field>Maximum chunk · minutes<input name="max_chunk" type="number" min="1" max="1440" required></label></div>
 <p class="hint" id="edit-progress"></p><p class="hint">Duration includes completed minutes. New chunk limits apply to remaining work. Completed blocks retain their original times and labels. Increasing a completed task's duration reopens it.</p>
 <div class="actions"><button type="submit" class="primary">Save changes</button><button type="button" id="close-edit">Cancel</button></div></form><p id="edit-error" class="reason" role="alert"></p></dialog>
 <dialog id="commitment-dialog" aria-labelledby="commitment-title"><h2 id="commitment-title">Edit commitment</h2>
-<form id="commitment-edit-form"><input name="id" type="hidden"><label>Name<input name="name" required maxlength="200"></label><label>Starts<input name="start" type="datetime-local" required></label><label>Ends<input name="end" type="datetime-local" required></label><div class="actions"><button type="submit" class="primary">Save commitment</button><button type="button" id="close-commitment">Cancel</button></div></form><p id="commitment-error" class="reason" role="alert"></p></dialog>
+<form id="commitment-edit-form"><input name="id" type="hidden"><label>Name<input name="name" required maxlength="200"></label><label>Starts<input name="start" type="datetime-local" required></label><label>Ends<input name="end" type="datetime-local" required></label><label class="check-label"><input name="repeat" type="checkbox">Repeat weekly</label><fieldset class="repeat-days" data-repeat-days hidden disabled><legend>Repeat on</legend><div class="weekday-choices"><label class="weekday"><input type="checkbox" name="weekday" value="1" aria-label="Monday"><span aria-hidden="true">Mon</span></label><label class="weekday"><input type="checkbox" name="weekday" value="2" aria-label="Tuesday"><span aria-hidden="true">Tue</span></label><label class="weekday"><input type="checkbox" name="weekday" value="3" aria-label="Wednesday"><span aria-hidden="true">Wed</span></label><label class="weekday"><input type="checkbox" name="weekday" value="4" aria-label="Thursday"><span aria-hidden="true">Thu</span></label><label class="weekday"><input type="checkbox" name="weekday" value="5" aria-label="Friday"><span aria-hidden="true">Fri</span></label><label class="weekday"><input type="checkbox" name="weekday" value="6" aria-label="Saturday"><span aria-hidden="true">Sat</span></label><label class="weekday"><input type="checkbox" name="weekday" value="0" aria-label="Sunday"><span aria-hidden="true">Sun</span></label></div><div class="actions"><button class="quiet" type="button" data-repeat-preset="weekdays">Weekdays</button><button class="quiet" type="button" data-repeat-preset="daily">Every day</button></div><p class="hint">Repeats from the Starts date on your selected days, at the same local time and duration. For overnight commitments, set Ends to the following date. Editing or deleting applies to the entire series.</p></fieldset><div class="actions"><button type="submit" class="primary">Save commitment</button><button type="button" id="close-commitment">Cancel</button></div></form><p id="commitment-error" class="reason" role="alert"></p></dialog>
 </div></template>
 <noscript>StudyBuddy needs JavaScript. Enable it and reopen this file to use your cards, habits, focus timer, and daily planner.</noscript>
 <template id="source-flashcards"><style>
@@ -1974,16 +1978,30 @@ const SlotCore = (() => {
     return value.trim();
   }
   const splittable = (remaining, minimum, maximum) => !remaining || Math.ceil(remaining / maximum) <= Math.floor(remaining / minimum);
+  function cleanChecklist(items) {
+    if (!Array.isArray(items) || items.length > 200) fail('Use at most 200 checklist items per block.');
+    const ids = new Set();
+    return items.map(item => {
+      if (!object(item)) fail('Invalid checklist item.');
+      const id = integer(item.id, 'Checklist item ID', 1, Number.MAX_SAFE_INTEGER - 1);
+      if (ids.has(id) || typeof item.done !== 'boolean') fail('Invalid checklist item ID or checkmark.');
+      ids.add(id);
+      return {id, text: nameValue(item.text), done: item.done};
+    });
+  }
   function validateTask(data, completed = 0) {
     if (!object(data)) fail('Task must be an object.');
     const duration = integer(data.duration, 'Duration');
-    const min_chunk = integer(data.min_chunk ?? Math.min(25, duration), 'Minimum chunk');
-    const max_chunk = integer(data.max_chunk ?? Math.min(60, duration), 'Maximum chunk');
+    const kind = data.kind ?? 'timed';
+    if (!['timed', 'checklist'].includes(kind)) fail('Choose a timed task or checklist block.');
+    const checklist = kind === 'checklist' ? cleanChecklist(data.checklist ?? []) : [];
+    const min_chunk = kind === 'checklist' ? duration - completed || duration : integer(data.min_chunk ?? Math.min(25, duration), 'Minimum chunk');
+    const max_chunk = kind === 'checklist' ? min_chunk : integer(data.max_chunk ?? Math.min(60, duration), 'Maximum chunk');
     if (min_chunk > max_chunk) fail('Minimum chunk cannot exceed maximum chunk.');
     if (duration < completed) fail(`Duration cannot be less than the ${completed} minutes already completed.`);
     if (!splittable(duration - completed, min_chunk, max_chunk)) fail(`The ${duration - completed} remaining minutes cannot be split exactly using these chunk limits.`);
     if (typeof data.priority !== 'string' || !Object.hasOwn(priorities, data.priority) || !['deep', 'shallow'].includes(data.energy)) fail('Choose high/medium/low priority and deep/shallow energy.');
-    return {name: nameValue(data.name), duration, priority: data.priority, deadline: timestamp(data.deadline), energy: data.energy, min_chunk, max_chunk, target_date: dayValue(data.target_date)};
+    return {name: nameValue(data.name), kind, checklist, duration, priority: data.priority, deadline: timestamp(data.deadline), energy: data.energy, min_chunk, max_chunk, target_date: dayValue(data.target_date)};
   }
   const empty = () => ({schema: 1, tasks: [], blocks: [], commitments: [], windows: {}, nextTaskId: 1, nextBlockId: 1, nextCommitmentId: 1});
   function getTask(db, id, includeDeleted = false) {
@@ -2008,15 +2026,20 @@ const SlotCore = (() => {
     return id;
   }
   function updateTask(db, id, data) {
-    const old = getTask(db, id), allowed = ['name', 'duration', 'priority', 'deadline', 'energy', 'min_chunk', 'max_chunk', 'target_date'];
+    const old = getTask(db, id), allowed = ['name', 'kind', 'checklist', 'duration', 'priority', 'deadline', 'energy', 'min_chunk', 'max_chunk', 'target_date'];
     if (!object(data) || Object.keys(data).some(k => !allowed.includes(k))) fail('Unknown task property. Use the task status controls to change status.');
     const completed = completedMinutes(db, old.id), clean = validateTask({...old, ...data}, completed);
     const status = clean.duration === completed ? 'completed' : old.status === 'completed' ? 'planned' : old.status;
     if (status !== 'completed') checkLimit(db, clean.target_date, old.id);
-    const previousDay = old.target_date, timingChanged = allowed.some(k => k !== 'name' && clean[k] !== old[k]);
+    const previousDay = old.target_date, timingChanged = allowed.some(k => !['name', 'checklist'].includes(k) && clean[k] !== old[k]);
     Object.assign(old, clean, {status, reason: null});
     if (timingChanged) { invalidate(db, previousDay); invalidate(db, clean.target_date); }
     else db.blocks.filter(b => b.task_id === old.id && b.status === 'planned').forEach(b => b.task_name = clean.name);
+  }
+  function setChecklistItem(db, taskId, itemId, done) {
+    const task = getTask(db, taskId), item = task.checklist?.find(i => i.id === Number(itemId));
+    if (task.kind !== 'checklist' || !item || typeof done !== 'boolean') fail('Checklist item not found or invalid checkmark.');
+    item.done = done;
   }
   function deleteTask(db, id) {
     const task = getTask(db, id, true);
@@ -2094,30 +2117,61 @@ const SlotCore = (() => {
     }
     return result;
   }
-  function commitmentDays(item) {
-    const days = [];
-    for (let d = item.start.slice(0, 10); d <= item.end.slice(0, 10);) {
-      days.push(d);
-      if (d === item.end.slice(0, 10)) break;
-      d = nextDay(d);
+  function cleanCommitment(data) {
+    if (!object(data)) fail('Commitment must be an object.');
+    const clean = {name: nameValue(data.name), start: timestamp(data.start), end: timestamp(data.end), weekdays: data.weekdays ?? []};
+    const duration = stampMinute(clean.end) - stampMinute(clean.start);
+    if (duration <= 0 || duration > 7 * 1440) fail('Commitments must last more than zero minutes and no longer than 7 days.');
+    if (!Array.isArray(clean.weekdays) || clean.weekdays.length > 7) fail('Choose the weekdays for this commitment.');
+    clean.weekdays = clean.weekdays.map(d => integer(d, 'Weekday', 0, 6)).sort((a, b) => a - b);
+    if (new Set(clean.weekdays).size !== clean.weekdays.length) fail('Choose each weekday only once.');
+    // A recurring occurrence must finish before the next selected start day.
+    if (clean.weekdays.some((d, i, days) => duration > ((days[(i + 1) % days.length] - d + 7) % 7 || 7) * 1440)) fail('Recurring occurrences cannot overlap each other. Shorten the commitment or choose fewer days.');
+    return clean;
+  }
+  const minuteStamp = minute => new Date(minute * 60000).toISOString().slice(0, 16).replace('T', ' ');
+  function commitmentOccurrences(item, day) {
+    const zero = midnight(day), first = stampMinute(item.start), duration = stampMinute(item.end) - first;
+    const starts = [];
+    if (!item.weekdays?.length) starts.push(first);
+    else {
+      const time = first - midnight(item.start.slice(0, 10));
+      for (let offset = 0; offset <= Math.ceil(duration / 1440); offset++) {
+        const date = zero - offset * 1440, start = date + time;
+        if (start >= first && item.weekdays.includes(new Date(date * 60000).getUTCDay())) starts.push(start);
+      }
     }
-    return days;
+    return starts.filter(start => start < zero + 1440 && start + duration > zero).map(start => ({...item,
+      rule_start: item.start, start: minuteStamp(start), end: minuteStamp(start + duration),
+      start_minute: Math.max(0, start - zero), end_minute: Math.min(1440, start + duration - zero)}));
   }
   function dayCommitments(db, day) {
-    const zero = midnight(day);
-    return db.commitments.filter(c => stampMinute(c.start) < zero + 1440 && stampMinute(c.end) > zero)
-      .sort((a, b) => a.start.localeCompare(b.start) || a.id - b.id)
-      .map(c => ({...c, start_minute: Math.max(0, stampMinute(c.start) - zero), end_minute: Math.min(1440, stampMinute(c.end) - zero)}));
+    return db.commitments.flatMap(c => commitmentOccurrences(c, day)).sort((a, b) => a.start.localeCompare(b.start) || a.id - b.id);
+  }
+  function commitmentsOverlap(a, b) {
+    // Two weekly rules repeat forever: compare a full week after both start dates.
+    // With a one-off, only its finite date range needs checking (at most 8 days).
+    const finite = !a.weekdays.length ? a : !b.weekdays.length ? b : null;
+    const first = finite ? midnight(finite.start.slice(0, 10)) : Math.max(midnight(a.start.slice(0, 10)), midnight(b.start.slice(0, 10))) + 7 * 1440;
+    const last = finite ? stampMinute(finite.end) : first + 7 * 1440;
+    for (let minute = first; minute < last; minute += 1440) {
+      const day = minuteStamp(minute).slice(0, 10);
+      if (commitmentOccurrences(a, day).some(x => commitmentOccurrences(b, day).some(y => x.start_minute < y.end_minute && x.end_minute > y.start_minute))) return true;
+    }
+    return false;
+  }
+  function invalidateCommitments(db, items) {
+    const days = new Set([...db.tasks.map(t => t.target_date), ...db.blocks.map(b => b.day)]);
+    for (const day of days) if (items.some(item => commitmentOccurrences(item, day).length)) invalidate(db, day);
   }
   function saveCommitment(db, data, id = null) {
     const old = id === null ? null : db.commitments.find(c => c.id === Number(id));
     if (id !== null && !old) fail('Commitment not found.');
-    if (!object(data) || Object.keys(data).some(k => !['name', 'start', 'end'].includes(k))) fail('Only name, start and end can be edited.');
-    const merged = {...old, ...data}, clean = {name: nameValue(merged.name), start: timestamp(merged.start), end: timestamp(merged.end)};
-    if (clean.start >= clean.end || stampMinute(clean.end) - stampMinute(clean.start) > 7 * 1440) fail('Commitments must last more than zero minutes and no longer than 7 days.');
-    if (db.commitments.some(c => c.id !== old?.id && c.start < clean.end && c.end > clean.start)) fail('This overlaps another fixed commitment.');
-    if (db.blocks.some(b => b.status === 'completed' && midnight(b.day) + b.start < stampMinute(clean.end) && midnight(b.day) + b.end > stampMinute(clean.start))) fail('This overlaps completed work. Completed history is preserved.');
-    for (const day of new Set([...commitmentDays(clean), ...(old ? commitmentDays(old) : [])])) invalidate(db, day);
+    if (!object(data) || Object.keys(data).some(k => !['name', 'start', 'end', 'weekdays'].includes(k))) fail('Only name, start, end and repeat days can be edited.');
+    const clean = cleanCommitment({...old, ...data});
+    if (db.commitments.some(c => c.id !== old?.id && commitmentsOverlap(c, clean))) fail('This overlaps another fixed commitment.');
+    if (db.blocks.some(b => b.status === 'completed' && commitmentOccurrences(clean, b.day).some(c => b.start < c.end_minute && b.end > c.start_minute))) fail('This overlaps completed work. Completed history is preserved.');
+    invalidateCommitments(db, [clean, ...(old ? [old] : [])]);
     if (old) Object.assign(old, clean);
     else { clean.id = db.nextCommitmentId++; db.commitments.push(clean); }
     return old?.id ?? clean.id;
@@ -2125,7 +2179,7 @@ const SlotCore = (() => {
   function deleteCommitment(db, id) {
     const item = db.commitments.find(c => c.id === Number(id));
     if (!item) fail('Commitment not found.');
-    commitmentDays(item).forEach(day => invalidate(db, day));
+    invalidateCommitments(db, [item]);
     db.commitments = db.commitments.filter(c => c.id !== item.id);
   }
   /* Deterministic bounded depth-first feasibility search. With no release times,
@@ -2272,7 +2326,7 @@ const SlotCore = (() => {
     const overlap = (a, b) => sum(windows, ([x, y]) => Math.max(0, Math.min(b, y) - Math.max(a, x)));
     const usable = sum(windows, ([a, b]) => b - a) - sum(mergeRanges(commitments.map(c => [c.start_minute, c.end_minute])), ([a, b]) => overlap(a, b));
     const scheduled = sum(blocks.filter(b => b.status !== 'skipped'), b => overlap(b.start, b.end));
-    return {day, windows, commitments, tasks, blocks, trash: db.tasks.filter(t => t.deleted_at).sort((a, b) => b.deleted_at.localeCompare(a.deleted_at) || b.id - a.id), load: {scheduled_minutes: scheduled, usable_minutes: usable, percent: usable ? Math.round(1000 * scheduled / usable) / 10 : 0, completed_minutes: sum(blocks.filter(b => b.status === 'completed'), b => b.end - b.start), unslotted_minutes: sum(tasks, t => t.unslotted_minutes)}};
+    return {day, windows, commitments, commitment_rules: db.commitments.filter(c => c.weekdays?.length || commitmentOccurrences(c, day).length), tasks, blocks, trash: db.tasks.filter(t => t.deleted_at).sort((a, b) => b.deleted_at.localeCompare(a.deleted_at) || b.id - a.id), load: {scheduled_minutes: scheduled, usable_minutes: usable, percent: usable ? Math.round(1000 * scheduled / usable) / 10 : 0, completed_minutes: sum(blocks.filter(b => b.status === 'completed'), b => b.end - b.start), unslotted_minutes: sum(tasks, t => t.unslotted_minutes)}};
   }
   function weekSnapshot(db, start) {
     const days = weekDays(start).map(day => snapshot(db, day));
@@ -2297,6 +2351,7 @@ const SlotCore = (() => {
       else if (parts.length === 3 && method === 'DELETE') deleteTask(db, id);
       else if (parts[3] === 'restore' && method === 'POST') restoreTask(db, id);
       else if (parts[3] === 'status' && method === 'POST') setTaskStatus(db, id, data.status);
+      else if (parts[3] === 'checklist' && parts.length === 5 && method === 'PATCH') setChecklistItem(db, id, parts[4], data.done);
       else fail('Unknown task action.');
     } else if (parts[1] === 'blocks' && parts[3] === 'status' && method === 'POST') setBlockStatus(db, parts[2], data.status);
     else if (path === '/api/windows' && method === 'PUT') setWindows(db, data.day, data.windows);
@@ -2342,6 +2397,7 @@ const SlotCore = (() => {
       const done = completed.get(t.id) || 0, clean = validateTask(t, done), scheduled = planned.get(t.id) || 0;
       if ((t.status === 'completed') !== (done === clean.duration) || scheduled && (t.deleted_at || t.status !== 'planned' || scheduled !== clean.duration - done)) fail('Task progress is inconsistent in backup.');
       if (!t.deleted_at && t.status !== 'completed') dayCounts.set(clean.target_date, (dayCounts.get(clean.target_date) || 0) + 1);
+      taskMap.set(t.id, clean);
       return {...clean, id: t.id, status: t.status, reason: t.reason, deleted_at: t.deleted_at};
     });
     if ([...dayCounts.values()].some(n => n > 100)) fail('Backup exceeds the 100 unfinished tasks per date limit.');
@@ -2351,12 +2407,11 @@ const SlotCore = (() => {
       const id = integer(c.id, 'Commitment ID', 1, Number.MAX_SAFE_INTEGER - 1);
       if (commitmentIds.has(id)) fail('Duplicate commitment ID in backup.');
       commitmentIds.add(id);
-      const clean = {id, name: nameValue(c.name), start: timestamp(c.start), end: timestamp(c.end)};
-      if (clean.start >= clean.end || stampMinute(clean.end) - stampMinute(clean.start) > 10080) fail('Invalid commitment duration in backup.');
+      const clean = {id, ...cleanCommitment(c)};
+      if (db.commitments.some(other => commitmentsOverlap(other, clean))) fail('Overlapping commitments in backup.');
       db.commitments.push(clean);
     }
     db.commitments.sort((a, b) => a.start.localeCompare(b.start));
-    if (db.commitments.some((c, i) => i && db.commitments[i - 1].end > c.start)) fail('Overlapping commitments in backup.');
     const occupied = new Map();
     for (const b of db.blocks) {
       if (b.status === 'skipped') continue;
@@ -2378,7 +2433,7 @@ const SlotCore = (() => {
     }
     return db;
   }
-  return {empty, clone, validateTask, parseBulk, dayValue, timestamp, nextDay, weekDays, mergeRanges, cleanWindows, completedMinutes, getWindows, dayCommitments, addTask, updateTask, deleteTask, restoreTask, setWindows, saveCommitment, deleteCommitment, solve, planDay, planWeek, setBlockStatus, setTaskStatus, pushTomorrow, snapshot, weekSnapshot, dispatch, validateDatabase};
+  return {empty, clone, validateTask, setChecklistItem, parseBulk, dayValue, timestamp, nextDay, weekDays, mergeRanges, cleanWindows, completedMinutes, getWindows, dayCommitments, addTask, updateTask, deleteTask, restoreTask, setWindows, saveCommitment, deleteCommitment, solve, planDay, planWeek, setBlockStatus, setTaskStatus, pushTomorrow, snapshot, weekSnapshot, dispatch, validateDatabase};
 })();
 
 const SlotStore = (() => {
@@ -2486,11 +2541,11 @@ function render(){
 
  const l=state.load;$('load').textContent=l.percent+'%';$('scheduled').textContent=`${l.scheduled_minutes} / ${l.usable_minutes}m`;$('unslotted').textContent=l.unslotted_minutes+'m';$('loadfill').style.width=Math.min(100,l.percent)+'%';$('loadbar').setAttribute('aria-valuenow',l.percent);$('load-detail').textContent=`${l.completed_minutes}m completed today · Usable time excludes fixed commitments. Load includes completed work within usable hours.`;
  $('windows').replaceChildren();state.windows.forEach(w=>addWindow(...w));
- $('commitments').innerHTML=state.commitments.map(c=>`<div class="item"><div class="row"><h3>${esc(c.name)}</h3><div class="actions"><button class="quiet" data-edit-commitment="${c.id}">Edit</button><button class="quiet" data-remove-commitment="${c.id}">Remove</button></div></div><p>${esc(c.start)} → ${esc(c.end)}</p></div>`).join('');
+ $('commitments').innerHTML=state.commitment_rules.map(c=>`<div class="item"><div class="row"><h3>${esc(c.name)}</h3><div class="actions"><button class="quiet" data-edit-commitment="${c.id}">Edit</button><button class="quiet" data-remove-commitment="${c.id}">${c.weekdays.length?'Delete series':'Remove'}</button></div></div><p>${esc(c.start)} → ${esc(c.end)}<br>${esc(repeatLabel(c))}</p></div>`).join('');
  const events=[...state.blocks.filter(b=>b.status!=='skipped').map(b=>({...b,a:b.start,b:b.end,fixed:false})),...state.commitments.map(c=>({...c,a:c.start_minute,b:c.end_minute,fixed:true}))].sort((a,b)=>a.a-b.a||a.id-b.id);
- $('timeline').innerHTML=events.length?events.map(e=>`<div class="slot ${e.fixed?'fixed':esc(e.energy)+' '+esc(e.status)}"><time>${clock(e.a)}–${clock(e.b)}<br>${e.b-e.a} minutes</time><div><div class="row"><h3>${esc(e.name)}</h3><span class="pill ${e.fixed?'':esc(e.energy)}">${e.fixed?'fixed':esc(e.energy)}</span></div>${e.fixed?'<p>Protected time</p>':actionButtons(e)}</div></div>`).join(''):'<div class="empty">A clear day starts here.<br>Add your tasks and generate a schedule.</div>';
+ $('timeline').innerHTML=events.length?events.map(e=>`<div class="slot ${e.fixed?'fixed':esc(e.energy)+' '+esc(e.status)}"><time>${clock(e.a)}–${clock(e.b)}<br> ${e.b-e.a} minutes</time><div><div class="row"><h3>${esc(e.name)}</h3><span class="pill ${e.fixed?'':esc(e.energy)}">${e.fixed?'fixed':esc(e.energy)}</span></div>${e.fixed?`<p>Protected time · ${esc(repeatLabel(e))}</p>`:checklistView(state.tasks.find(t=>t.id===e.task_id))+actionButtons(e)}</div></div>`).join(''):'<div class="empty">A clear day starts here.<br>Add your tasks and generate a schedule.</div>';
  $('task-count').textContent=`(${state.tasks.length})`;
- $('tasks').innerHTML=state.tasks.length?state.tasks.map(t=>`<div class="item"><div class="row"><h3>${esc(t.name)}</h3><span class="pill ${esc(t.status)}">${esc(t.status)}</span></div><p>${t.duration}m · ${esc(t.priority)} · ${esc(t.energy)} · chunks ${t.min_chunk}–${t.max_chunk}m<br>Due ${esc(t.deadline)} · ${t.completed_minutes}m complete · ${t.scheduled_minutes}m planned here${t.target_date!==state.day?`<br>Task assigned to ${esc(t.target_date)}`:''}</p>${t.unslotted_minutes?`<p class="reason">${t.unslotted_minutes}m unslotted — ${esc(t.reason||'Generate a schedule to find available slots.')}</p>`:''}${taskActions(t)}</div>`).join(''):'<p class="muted">No tasks for this date.</p>';
+ $('tasks').innerHTML=state.tasks.length?state.tasks.map(t=>`<div class="item"><div class="row"><h3>${esc(t.name)}</h3><span class="pill ${esc(t.status)}">${esc(t.status)}</span></div><p>${t.duration}m · ${esc(t.priority)} · ${esc(t.energy)} · ${t.kind==='checklist'?'checklist block':`chunks ${t.min_chunk}–${t.max_chunk}m`}<br>Due ${esc(t.deadline)} · ${t.completed_minutes}m complete · ${t.scheduled_minutes}m planned here${t.target_date!==state.day?`<br>Task assigned to ${esc(t.target_date)}`:''}</p>${t.unslotted_minutes?`<p class="reason">${t.unslotted_minutes}m unslotted — ${esc(t.reason||'Generate a schedule to find available slots.')}</p>`:''}${checklistView(t)}${taskActions(t)}</div>`).join(''):'<p class="muted">No tasks for this date.</p>';
  const history=state.blocks.filter(b=>b.status==='skipped');$('history-panel').hidden=!history.length;$('history').innerHTML=history.map(b=>`<div class="item"><h3>${esc(b.name)}</h3><p>${clock(b.start)}–${clock(b.end)} · skipped, no completion credit</p></div>`).join('');
  $('trash-count').textContent=`(${state.trash.length})`;
  $('trash').innerHTML=state.trash.length?state.trash.map(t=>`<div class="item"><div class="row"><h3>${esc(t.name)}</h3><button class="quiet" data-restore-task="${t.id}">Restore task</button></div><p>Assigned ${esc(t.target_date)} · ${esc(t.status)}</p></div>`).join(''):'<p class="muted">Trash is empty.</p>';
@@ -2498,6 +2553,37 @@ function render(){
 async function refresh(){state=await api('/api/day?date='+encodeURIComponent($('day').value));weekState=await api('/api/week?date='+encodeURIComponent(weekStart||state.day));upcomingTasks=await api('/api/upcoming?after='+localDate(new Date()));render();}
 async function changed(message){await refresh();notice(message);}
 function formData(form){return Object.fromEntries(new FormData(form));}
+function syncTaskKind(form){
+ const checklist=form.elements.kind.value==='checklist';
+ const fields=form.querySelector('[data-checklist-fields]');fields.hidden=!checklist;fields.querySelectorAll('input,textarea').forEach(input=>input.disabled=!checklist);
+ form.querySelectorAll('[data-chunk-field]').forEach(label=>{label.hidden=checklist;label.querySelector('input').disabled=checklist;});
+}
+function addChecklistEditorRow(item){
+ const row=document.createElement('div');row.className='checklist-editor-row';row.dataset.itemId=item.id;
+ row.innerHTML=`<input type="checkbox" aria-label="Item complete" ${item.done?'checked':''}><input type="text" aria-label="Item text" required maxlength="200" value="${esc(item.text)}"><button type="button" class="quiet" aria-label="Remove item">×</button>`;
+ row.querySelector('button').onclick=()=>row.remove();$('checklist-editor').append(row);return row;
+}
+function taskData(form){
+ const data=formData(form);['duration','min_chunk','max_chunk'].forEach(k=>{if(k in data)data[k]=Number(data[k]);});
+ if(data.kind==='checklist'){
+  data.checklist=form.id==='task-form'?(data.checklist_text||'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean).map((text,i)=>({id:i+1,text,done:false})):
+   [...$('checklist-editor').children].map(row=>({id:Number(row.dataset.itemId),text:row.querySelector('input[type=text]').value,done:row.querySelector('input[type=checkbox]').checked}));
+ }else data.checklist=[];
+ delete data.checklist_text;return data;
+}
+function syncRepeat(form){const field=form.querySelector('[data-repeat-days]');field.hidden=field.disabled=!form.elements.repeat.checked;}
+function commitmentData(form){
+ const data=formData(form);delete data.repeat;delete data.weekday;
+ data.weekdays=form.elements.repeat.checked?[...form.querySelectorAll('[name=weekday]:checked')].map(c=>Number(c.value)):[];
+ if(form.elements.repeat.checked&&!data.weekdays.length)throw Error('Choose at least one repeat day.');
+ return data;
+}
+const weekdayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function repeatLabel(c){return c.weekdays?.length?'Weekly · '+(c.weekdays.length===7?'Every day':c.weekdays.map(d=>weekdayNames[d]).join(', '))+' · From '+(c.rule_start||c.start).slice(0,10):'One-off';}
+function checklistView(task){
+ if(task?.kind!=='checklist')return '';
+ return `<p class="checklist-progress">Checklist · ${task.checklist.filter(i=>i.done).length}/${task.checklist.length} done</p><ul class="block-checklist">${task.checklist.map(item=>`<li><label class="check-label"><input type="checkbox" data-check-task="${task.id}" data-check-item="${item.id}" ${item.done?'checked':''}><span>${esc(item.text)}</span></label></li>`).join('')}</ul><button class="quiet" data-edit="${task.id}">Edit checklist</button><p class="hint">Checkmarks track items. Complete records the time block.</p>`;
+}
 defaults();run(async()=>{await refresh();notice('Ready. Everything stays in this browser.');});
 $('refresh').onclick=()=>run(async()=>{await refresh();notice('Day refreshed.');});
 $('day').onchange=()=>{if(!$('day').value||!$('day').validity.valid){$('day').value=state?.day||localDate(new Date());return;}run(async()=>{weekStart=$('day').value;defaults();await refresh();notice('');});};
@@ -2506,25 +2592,25 @@ $('plan').onclick=()=>run(async()=>{notice('Finding your schedule…');const res
 $('plan-week').onclick=()=>run(async()=>{notice('Finding schedules for all 7 days…');const result=await api('/api/plan/week','POST',{day:weekStart||$('day').value});await changed(`7 days planned. ${result.scheduled_tasks} tasks scheduled. ${result.unslotted_tasks} unslotted. Tasks keep their assigned dates.`);});
 $('week-today').onclick=()=>run(async()=>{weekStart=localDate(new Date());$('day').value=weekStart;defaults();await changed('Showing today and the next 6 days.');});
 $('push').onclick=()=>run(async()=>{notice('Moving unfinished work…');const result=await api('/api/push','POST',{day:$('day').value});if(result.moved){$('day').value=result.day;defaults();}await changed(`${result.moved} tasks moved to ${result.day}. Completed history and deadlines preserved.`);});
-$('task-form').onsubmit=e=>{e.preventDefault();const form=e.currentTarget;run(async()=>{const data=formData(form);['duration','min_chunk','max_chunk'].forEach(k=>data[k]=Number(data[k]));await api('/api/tasks','POST',data);form.elements.name.value='';if(data.target_date!==$('day').value){$('day').value=data.target_date;defaults();}await changed('Task added for '+data.target_date+'. Generate your day or week when ready.');});};
+$('task-form').onsubmit=e=>{e.preventDefault();const form=e.currentTarget;run(async()=>{const data=taskData(form);await api('/api/tasks','POST',data);form.elements.name.value='';form.elements.checklist_text.value='';if(data.target_date!==$('day').value){$('day').value=data.target_date;defaults();}await changed('Task added for '+data.target_date+'. Generate your day or week when ready.');});};
 $('bulk-form').onsubmit=e=>{e.preventDefault();run(async()=>{const result=await api('/api/tasks/bulk','POST',{day:$('day').value,text:$('bulk').value});$('bulk').value='';await changed(`${result.ids.length} tasks imported. Generate your schedule when ready.`);});};
 $('add-window').onclick=()=>addWindow();
 $('windows-form').onsubmit=e=>{e.preventDefault();run(async()=>{const windows=[...$('windows').children].map(row=>[...row.querySelectorAll('input')].map(input=>{const [h,m]=input.value.split(':').map(Number);return h*60+m;})),allWeek=$('week-hours').checked;await api(allWeek?'/api/windows/week':'/api/windows','PUT',{day:allWeek?(weekStart||$('day').value):$('day').value,windows});$('week-hours').checked=false;await changed(allWeek?'Hours saved for all 7 days. Generate your week when ready.':'Hours saved. Generate a new schedule.');});};
-$('commitment-form').onsubmit=e=>{e.preventDefault();const form=e.currentTarget;run(async()=>{await api('/api/commitments','POST',formData(form));form.elements.name.value='';await changed('Commitment added. Generate a new schedule.');});};
+$('commitment-form').onsubmit=e=>{e.preventDefault();const form=e.currentTarget;run(async()=>{await api('/api/commitments','POST',commitmentData(form));form.elements.name.value='';await changed('Commitment added. Generate a new schedule.');});};
 root.addEventListener('click',e=>{const button=e.target.closest('button');if(!button||busy)return;const d=button.dataset;
  if(d.openDay){$('day').value=d.openDay;defaults();setSlotView('day');run(async()=>{await changed('');});}
  if(d.block)run(async()=>{await api(`/api/blocks/${d.block}/status`,'POST',{status:d.status});await changed(d.status==='completed'?'Work recorded. Keep going.':'Block skipped. Generate again or push unfinished work to tomorrow.');});
  if(d.task)run(async()=>{await api(`/api/tasks/${d.task}/status`,'POST',{status:d.status});await changed('Task status updated.');});
- if(d.removeCommitment)run(async()=>{await api(`/api/commitments/${d.removeCommitment}`,'DELETE',{});await changed('Commitment removed. Generate a new schedule.');});
+ if(d.removeCommitment)run(async()=>{await api(`/api/commitments/${d.removeCommitment}`,'DELETE',{});await changed('Commitment deleted, including all repeats. Generate a new schedule.');});
  if(d.deleteTask)run(async()=>{await api(`/api/tasks/${d.deleteTask}`,'DELETE',{});await changed('Task deleted. You can restore it from Trash. Completed history is preserved.');});
  if(d.restoreTask)run(async()=>{const t=state.trash.find(t=>t.id===Number(d.restoreTask));await api(`/api/tasks/${d.restoreTask}/restore`,'POST',{});$('day').value=t.target_date;defaults();await changed('Task restored to its saved date. Generate a schedule when ready.');});
- if(d.edit){const t=state.tasks.find(t=>t.id===Number(d.edit));for(const k of ['id','name','deadline','priority','energy','duration','min_chunk','max_chunk','target_date'])$('edit-form').elements[k].value=k==='deadline'?t[k].replace(' ','T'):t[k];$('edit-progress').textContent=`${t.completed_minutes} minutes already completed · ${t.remaining_minutes} minutes remaining · ${t.status}`;$('edit-error').textContent='';$('edit-dialog').showModal();}
- if(d.editCommitment){const c=state.commitments.find(c=>c.id===Number(d.editCommitment));for(const k of ['id','name','start','end'])$('commitment-edit-form').elements[k].value=['start','end'].includes(k)?c[k].replace(' ','T'):c[k];$('commitment-error').textContent='';$('commitment-dialog').showModal();}
+ if(d.edit){const t=state.tasks.find(t=>t.id===Number(d.edit));$('edit-form').elements.kind.value=t.kind;$('checklist-editor').replaceChildren();t.checklist.forEach(addChecklistEditorRow);syncTaskKind($('edit-form'));for(const k of ['id','name','deadline','priority','energy','duration','min_chunk','max_chunk','target_date'])$('edit-form').elements[k].value=k==='deadline'?t[k].replace(' ','T'):t[k];$('edit-progress').textContent=`${t.completed_minutes} minutes already completed · ${t.remaining_minutes} minutes remaining · ${t.status}`;$('edit-error').textContent='';$('edit-dialog').showModal();}
+ if(d.editCommitment){const c=state.commitment_rules.find(c=>c.id===Number(d.editCommitment));const form=$('commitment-edit-form');form.elements.repeat.checked=!!c.weekdays.length;form.querySelectorAll('[name=weekday]').forEach(input=>input.checked=c.weekdays.includes(Number(input.value)));syncRepeat(form);for(const k of ['id','name','start','end'])$('commitment-edit-form').elements[k].value=['start','end'].includes(k)?c[k].replace(' ','T'):c[k];$('commitment-error').textContent='';$('commitment-dialog').showModal();}
 });
 $('close-edit').onclick=()=>$('edit-dialog').close();
-$('edit-form').onsubmit=e=>{e.preventDefault();run(async()=>{const data=formData(e.target),id=data.id;delete data.id;['duration','min_chunk','max_chunk'].forEach(k=>data[k]=Number(data[k]));await api('/api/tasks/'+id,'PATCH',data);$('edit-dialog').close();$('day').value=data.target_date;defaults();await changed('Task updated. Generate a schedule after changes to timing, priority, or energy.');});};
+$('edit-form').onsubmit=e=>{e.preventDefault();run(async()=>{const data=taskData(e.target),id=data.id;delete data.id;await api('/api/tasks/'+id,'PATCH',data);$('edit-dialog').close();$('day').value=data.target_date;defaults();await changed('Task updated. Generate a schedule after changes to timing, priority, or energy.');});};
 $('close-commitment').onclick=()=>$('commitment-dialog').close();
-$('commitment-edit-form').onsubmit=e=>{e.preventDefault();run(async()=>{const data=formData(e.target),id=data.id;delete data.id;await api('/api/commitments/'+id,'PATCH',data);$('commitment-dialog').close();$('day').value=data.start.slice(0,10);defaults();await changed('Commitment updated. Generate a new schedule.');});};
+$('commitment-edit-form').onsubmit=e=>{e.preventDefault();run(async()=>{const data=commitmentData(e.target),id=data.id;delete data.id;await api('/api/commitments/'+id,'PATCH',data);$('commitment-dialog').close();await changed('Commitment updated. Generate a new schedule.');});};
 
 function downloadBackup(value) {
  const blob=new Blob([JSON.stringify(value,null,2)+'\n'],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');
@@ -2569,6 +2655,30 @@ root.addEventListener('click',event=>{
  if(event.target.closest('#refresh,#push'))root.querySelector('.more-actions').open=false;
 });
 root.addEventListener('invalid',event=>{const details=event.target.closest('details');if(details)details.open=true;},true);
+for(const id of ['task-form','edit-form']){
+ const form=$(id);form.elements.kind.onchange=()=>syncTaskKind(form);syncTaskKind(form);
+}
+$('add-checklist-item').onclick=()=>{
+ const ids=[...$('checklist-editor').children].map(row=>Number(row.dataset.itemId));
+ addChecklistEditorRow({id:Math.max(0,...ids)+1,text:'',done:false}).querySelector('input[type=text]').focus();
+};
+for(const id of ['commitment-form','commitment-edit-form']){
+ const form=$(id);form.elements.repeat.onchange=()=>syncRepeat(form);syncRepeat(form);
+ form.querySelectorAll('[data-repeat-preset]').forEach(button=>button.onclick=()=>{
+  form.querySelectorAll('[name=weekday]').forEach(input=>input.checked=button.dataset.repeatPreset==='daily'||![0,6].includes(Number(input.value)));
+ });
+}
+root.addEventListener('change',event=>{
+ const input=event.target;if(!input.matches('[data-check-item]'))return;
+ if(busy){input.checked=!input.checked;return;}
+ const done=input.checked,container=input.closest('#timeline,#tasks');
+ run(async()=>{
+  try{await api(`/api/tasks/${input.dataset.checkTask}/checklist/${input.dataset.checkItem}`,'PATCH',{done});}
+  catch(error){input.checked=!done;throw error;}
+  await changed('Checklist saved.');
+  $(container.id).querySelector(`[data-check-task="${input.dataset.checkTask}"][data-check-item="${input.dataset.checkItem}"]`)?.focus();
+ });
+});
 const taskForm=$('task-form');let customChunks=false;
 taskForm.elements.target_date.addEventListener('change',()=>{if(taskForm.elements.target_date.value)taskForm.elements.deadline.value=taskForm.elements.target_date.value+(taskForm.elements.deadline.value.slice(10)||'T17:00');});
 ['min_chunk','max_chunk'].forEach(key=>taskForm.elements[key].addEventListener('input',()=>customChunks=true));

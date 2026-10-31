@@ -36,3 +36,5 @@ The core tools, fonts, Markdown renderer, and math support are embedded. Spotify
 
 ---
 
+You can download the individual apps from this repository as well, if you want to use them separately. 
+

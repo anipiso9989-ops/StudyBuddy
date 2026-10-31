@@ -36,10 +36,3 @@ The core tools, fonts, Markdown renderer, and math support are embedded. Spotify
 
 ---
 
-StudyBuddy combines these four GitHub projects, also by me:
-
-1. [Habits](https://github.com/anipiso9989-ops/habits)
-2. [Tempo](https://github.com/anipiso9989-ops/tempo)
-3. [Flashcards](https://github.com/anipiso9989-ops/flashcards)
-4. [Slot](https://github.com/anipiso9989-ops/slot)
-

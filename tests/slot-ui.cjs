@@ -26,16 +26,27 @@ const server=http.createServer((req,res)=>{
   const day=async date=>{await q('#day').fill(date);await q('#day').dispatchEvent('change');await page.waitForFunction(()=>!document.getElementById('slot-host').shadowRoot.getElementById('day').disabled);};
   const view=async name=>q(`.view-nav [data-slot-view=${name}]`).click();
   await notice('Ready.');await day('2026-11-02');
+  assert.equal(await q('#task-form [name=name]').isVisible(),true);
+  await q('#task-form [name=name]').fill('Draft timed task');
   await q('#task-form [name=kind]').selectOption('checklist');
-  await q('#task-form [name=name]').fill('Life admin');await q('#task-form [name=duration]').fill('45');
+  assert.equal(await q('#task-form [name=name]').isVisible(),false);
+  assert.equal(await q('#task-form [name=name]').isDisabled(),true);
+  await q('#task-form [name=kind]').selectOption('timed');
+  assert.equal(await q('#task-form [name=name]').isVisible(),true);
+  assert.equal(await q('#task-form [name=name]').inputValue(),'Draft timed task');
+  await q('#task-form [name=kind]').selectOption('checklist');
+  await q('#task-form [name=duration]').fill('45');
   await q('#task-form [name=checklist_text]').fill('Book dentist\nSend invoice\nCall bank');
   await q('#task-form button[type=submit]').click();await notice('Task added');
   await q('#plan').click();await notice('1 tasks scheduled');
+  assert.equal(await q('#timeline h3').first().innerText(),'Checklist Block');
   assert.equal(await q('#timeline [data-check-item]').count(),3);
   await q('#timeline [data-check-item="1"]').check();await notice('Checklist saved');
   await page.reload();await notice('Ready.');await day('2026-11-02');
   assert.equal(await q('#timeline [data-check-item="1"]').isChecked(),true);
   await q('#timeline [data-edit]').click();
+  assert.equal(await q('#edit-form [name=name]').isVisible(),false);
+  assert.equal(await q('#edit-form [name=name]').isDisabled(),true);
   await q('#checklist-editor .checklist-editor-row').nth(0).locator('input[type=text]').fill('Book dentist checkup');
   await q('#checklist-editor .checklist-editor-row').nth(1).locator('button').click();
   await q('#add-checklist-item').click();await q('#checklist-editor .checklist-editor-row').last().locator('input[type=text]').fill('Pay bill');
@@ -52,7 +63,10 @@ const server=http.createServer((req,res)=>{
   assert.equal(await q('#tasks [data-check-item="1"]').isChecked(),true);
   await view('day');
   // Keep normal timed work alongside the checklist block.
-  await q('#task-form [name=kind]').selectOption('timed');await q('#task-form [name=name]').fill('Read chapter');
+  await q('#task-form [name=kind]').selectOption('timed');
+  assert.equal(await q('#task-form [name=name]').isVisible(),true);
+  assert.equal(await q('#task-form [name=name]').isDisabled(),false);
+  await q('#task-form [name=name]').fill('Read chapter');
   await q('#task-form [name=duration]').fill('30');await q('#task-form button[type=submit]').click();await notice('Task added');
   await view('settings');await q('#commitment-form').evaluate(form=>form.closest('details').open=true);
   await q('#commitment-form [name=name]').fill('Work');
@@ -77,6 +91,8 @@ const server=http.createServer((req,res)=>{
   const download=page.waitForEvent('download');await q('#export-data').click();const saved=await download;
   const backup=JSON.parse(fs.readFileSync(await saved.path(),'utf8'));
   assert.equal(backup.data.tasks.find(t=>t.kind==='checklist').checklist[0].done,true);
+  assert.equal(backup.data.tasks.find(t=>t.kind==='checklist').name,'Checklist Block');
+  assert.equal(backup.data.tasks.find(t=>t.kind==='timed').name,'Read chapter');
   assert.deepEqual(backup.data.commitments[0].weekdays,[1,2,3,4,5]);
   // Restore a backup written by the other app when available.
   const payload=transfer||backup;transfer=backup;page.once('dialog',dialog=>dialog.accept());

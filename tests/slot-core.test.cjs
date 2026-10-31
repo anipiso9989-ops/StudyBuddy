@@ -16,8 +16,10 @@ for (const file of ['Slot/Slot.html', 'StudyBuddy.html']) {
   const C = loadCore(file);
   test(`${file}: checklist and timed work share scheduling, without item estimates`, async () => {
     const db = C.empty();
-    const id = C.addTask(db, task({name:'Admin', kind:'checklist', duration:90, min_chunk:1, max_chunk:5, checklist:[{id:1,text:'Book appointment',done:false},{id:2,text:'Send invoice',done:false}]}));
+    const id = C.addTask(db, task({name:undefined, kind:'checklist', duration:90, min_chunk:1, max_chunk:5, checklist:[{id:1,text:'Book appointment',done:false},{id:2,text:'Send invoice',done:false}]}));
+    assert.equal(db.tasks[0].name,'Checklist Block');
     C.addTask(db, task());
+    assert.equal(db.tasks[1].name,'Read');
     await C.planDay(db, '2026-11-02');
     const blocks = db.blocks.filter(b => b.task_id === id);
     assert.equal(blocks.length,1); assert.equal(blocks[0].end-blocks[0].start,90);
@@ -26,14 +28,18 @@ for (const file of ['Slot/Slot.html', 'StudyBuddy.html']) {
     await C.dispatch(db,`/api/tasks/${id}/checklist/1`,'PATCH',{done:true});
     assert.equal(JSON.stringify(db.blocks),before);
     C.updateTask(db,id,{name:'Life admin',checklist:[{id:1,text:'Book dentist',done:true},{id:3,text:'Call bank',done:false}]});
+    assert.equal(db.tasks[0].name,'Checklist Block');
     assert.equal(db.blocks.filter(b=>b.task_id===id).length,1);
-    const restored = C.validateDatabase(JSON.parse(JSON.stringify(db)));
+    const legacy = JSON.parse(JSON.stringify(db));legacy.tasks[0].name='Old checklist';legacy.blocks[0].task_name='Old checklist';
+    const restored = C.validateDatabase(legacy);
+    assert.equal(restored.tasks[0].name,'Checklist Block');assert.equal(restored.blocks[0].task_name,'Checklist Block');
     assert.equal(restored.tasks[0].checklist[0].text,'Book dentist');
     assert.equal(restored.tasks[0].checklist[0].done,true);
     C.setBlockStatus(db,blocks[0].id,'completed');
     assert.equal(db.tasks[0].status,'completed');
     assert.equal(db.tasks[0].checklist[1].done,false); // Time and checklist progress are independent.
-    assert.doesNotThrow(()=>C.validateDatabase(db));
+    db.blocks[0].task_name='Historical label';
+    assert.equal(C.validateDatabase(db).blocks[0].task_name,'Historical label');
   });
   test(`${file}: a checklist block stays unslotted when only fragmented time is available`, async () => {
     const db=C.empty();C.setWindows(db,'2026-11-02',[[540,570],[600,630]]);

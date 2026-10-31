@@ -228,7 +228,7 @@ const SlotCore = (() => {
     if (duration < completed) fail(`Duration cannot be less than the ${completed} minutes already completed.`);
     if (!splittable(duration - completed, min_chunk, max_chunk)) fail(`The ${duration - completed} remaining minutes cannot be split exactly using these chunk limits.`);
     if (typeof data.priority !== 'string' || !Object.hasOwn(priorities, data.priority) || !['deep', 'shallow'].includes(data.energy)) fail('Choose high/medium/low priority and deep/shallow energy.');
-    return {name: nameValue(data.name), kind, checklist, duration, priority: data.priority, deadline: timestamp(data.deadline), energy: data.energy, min_chunk, max_chunk, target_date: dayValue(data.target_date)};
+    return {name: kind === 'checklist' ? 'Checklist Block' : nameValue(data.name), kind, checklist, duration, priority: data.priority, deadline: timestamp(data.deadline), energy: data.energy, min_chunk, max_chunk, target_date: dayValue(data.target_date)};
   }
   const empty = () => ({schema: 1, tasks: [], blocks: [], commitments: [], windows: {}, nextTaskId: 1, nextBlockId: 1, nextCommitmentId: 1});
   function getTask(db, id, includeDeleted = false) {
@@ -647,6 +647,7 @@ const SlotCore = (() => {
       if (dayCommitments(db, b.day).some(c => b.start < c.end_minute && b.end > c.start_minute)) fail('Work overlaps a commitment in backup.');
       if (b.status === 'planned') {
         const t = taskMap.get(b.task_id), length = b.end - b.start;
+        if (t.kind === 'checklist') b.task_name = t.name;
         if (b.day !== t.target_date || length < t.min_chunk || length > t.max_chunk || midnight(b.day) + b.end > stampMinute(t.deadline) || !mergeRanges(getWindows(db, b.day)).some(([a, z]) => a <= b.start && z >= b.end)) fail('Invalid planned work in backup.');
       }
     }
@@ -782,6 +783,7 @@ async function changed(message){await refresh();notice(message);}
 function formData(form){return Object.fromEntries(new FormData(form));}
 function syncTaskKind(form){
  const checklist=form.elements.kind.value==='checklist';
+ const name=form.elements.name;name.closest('label').hidden=checklist;name.disabled=checklist;
  const fields=form.querySelector('[data-checklist-fields]');fields.hidden=!checklist;fields.querySelectorAll('input,textarea').forEach(input=>input.disabled=!checklist);
  form.querySelectorAll('[data-chunk-field]').forEach(label=>{label.hidden=checklist;label.querySelector('input').disabled=checklist;});
 }

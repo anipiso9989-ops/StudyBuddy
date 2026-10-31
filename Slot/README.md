@@ -39,7 +39,7 @@ The default usable window is 09:00–17:00.
 
 ## Creating Tasks
 
-Every task or checklist block includes a name, assigned date, total duration, deadline, priority, and energy classification.
+Timed tasks have a custom name; checklist blocks are automatically named **Checklist Block**. Both include an assigned date, total duration, deadline, priority, and energy classification.
 
 Advanced options allow you to specify chunk limits.
 
@@ -61,7 +61,7 @@ Tasks can also be entered in bulk using comma-separated fields.
 
 ### Checklist Blocks
 
-Choose **Checklist block** in the **Task type** menu. Name the block, choose its total duration, and enter one to-do per line. You can also create an empty block and add its items later. Individual items never require duration estimates. Timed tasks and checklist blocks can coexist on the same day.
+Choose **Checklist block** in the **Task type** menu. The task name field disappears and the block is automatically named **Checklist Block**. Choose its total duration and enter one to-do per line. The name field returns when you select **Timed task**. Checklist block names are also fixed when editing. You can also create an empty block and add its items later. Individual items never require duration estimates. Timed tasks and checklist blocks can coexist on the same day.
 
 The scheduler places a checklist block as one uninterrupted reservation around the same hours, deadlines, priorities, and commitments as normal tasks. Chunk settings apply to timed tasks only. If the block cannot fit, it remains visibly unslotted.
 

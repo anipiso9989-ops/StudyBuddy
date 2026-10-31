@@ -38,3 +38,4 @@ The core tools, fonts, Markdown renderer, and math support are embedded. Spotify
 
 You can download the individual apps from this repository as well, if you want to use them separately. 
 
+Use **Hide** between **Cram** and **Add Cards** to check cards to exclude from Study, Cram, and spaced repetition, press **Enter** to finish, and restore cards individually by unchecking them in Hide mode or all at once with **Unhide All**.

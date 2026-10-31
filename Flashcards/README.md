@@ -87,3 +87,5 @@ Flashcards prioritizes recall over decoration.
 Its monochrome interface, monospace typography, responsive layout, and restrained controls reduce distractions. The application emphasizes the information being studied rather than dashboards, animations, or gamification.
 
 **The goal is not to make studying complicated. It is to make consistent, effective review easier.**
+
+Use **Hide** between **Cram** and **Add Cards** to check cards to exclude from Study, Cram, and spaced repetition, press **Enter** to finish, and restore cards individually by unchecking them in Hide mode or all at once with **Unhide All**.

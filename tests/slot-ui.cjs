@@ -18,6 +18,7 @@ const server=http.createServer((req,res)=>{
  for(const file of ['Slot/Slot.html','StudyBuddy.html']){
   const context=await browser.newContext({viewport:{width:1280,height:1000},acceptDownloads:true});
   await context.addInitScript(()=>localStorage.setItem('studybuddy-active-tool','slot'));
+  await context.clock.install({time:new Date('2026-11-01T08:00:00Z')});
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.route('**/*',route=>route.request().url().startsWith('http://127.0.0.1:')?route.continue():route.abort());
   await page.goto(`http://127.0.0.1:${server.address().port}/${file}`);
@@ -38,7 +39,7 @@ const server=http.createServer((req,res)=>{
   await q('#task-form [name=duration]').fill('45');
   await q('#task-form [name=checklist_text]').fill('Book dentist\nSend invoice\nCall bank');
   await q('#task-form button[type=submit]').click();await notice('Task added');
-  await q('#plan').click();await notice('1 tasks scheduled');
+
   assert.equal(await q('#timeline h3').first().innerText(),'Checklist Block');
   assert.equal(await q('#timeline [data-check-item]').count(),3);
   await q('#timeline [data-check-item="1"]').check();await notice('Checklist saved');
@@ -85,9 +86,9 @@ const server=http.createServer((req,res)=>{
   await q('#commitment-edit-form button[type=submit]').click();await notice('Commitment updated');
   assert.equal(await q('#day').inputValue(),'2026-11-03');
   await view('day');assert.match(await q('#timeline').innerText(),/Shift/);
-  await day('2026-11-02');await q('#plan').click();await notice('2 tasks scheduled');
+  await day('2026-11-02');
   assert.equal(await q('#timeline [data-check-item="1"]').isChecked(),true);
-  await view('week');await q('#plan-week').click();await notice('7 days planned');assert.match(await q('#week-days').innerText(),/Shift/);
+  await view('week');assert.match(await q('#week-days').innerText(),/Shift/);
   await view('settings');await q('#storage-panel details').evaluate(d=>d.open=true);
   const download=page.waitForEvent('download');await q('#export-data').click();const saved=await download;
   const backup=JSON.parse(fs.readFileSync(await saved.path(),'utf8'));
@@ -113,7 +114,7 @@ const server=http.createServer((req,res)=>{
   assert.equal(await q('.weekday-choices').first().evaluate(el=>el.scrollWidth<=el.clientWidth+1),true);
   await q('#commitments [data-edit-commitment]').click();assert.equal(await q('#commitment-dialog').evaluate(el=>el.scrollWidth<=el.clientWidth+1),true);
   if(process.env.SLOT_TEST_SCREENSHOTS)await page.screenshot({path:path.join(process.env.SLOT_TEST_SCREENSHOTS,file.replaceAll('/','-')+'-mobile-dialog.png')});
-  await q('#close-commitment').click();await view('day');await q('#plan').click();await notice('2 tasks scheduled');
+  await q('#close-commitment').click();await view('day');
   if(process.env.SLOT_TEST_SCREENSHOTS){await q('#timeline').scrollIntoViewIfNeeded();await page.screenshot({path:path.join(process.env.SLOT_TEST_SCREENSHOTS,file.replaceAll('/','-')+'-mobile-checklist.png')});}
   assert.equal(await q('.sb-content').evaluate(el=>el.scrollWidth<=el.clientWidth+1),true);
   assert.deepEqual(errors,[]);console.log(`PASS ${file}: create, check, reload, edit, schedule, repeat, export/restore, delete, mobile; no JS errors`);

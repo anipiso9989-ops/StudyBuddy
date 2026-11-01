@@ -64,7 +64,7 @@ async function fixture(file){
   assert.equal(await q(`#timeline [data-edit="${ids.completed}"]`).count(),0);
   assert.equal((await saved()).blocks.filter(b=>b.task_id===ids.completed&&b.status==='completed').length,1);
   await q(`#timeline [data-restore-task="${ids.completed}"]`).click();await notice('Task restored');
-  await q('#plan').click();await notice('2 tasks scheduled');
+
   // A checklist's name, type, and contents are editable using the same dialog.
   await edit(`#timeline [data-edit="${ids.checklist}"]`);await field('name').fill('Admin errands');await save();
   await page.reload();await notice('Ready.');await day('2098-06-02');
@@ -107,9 +107,9 @@ async function fixture(file){
   assert.equal(await q('#edit-dialog').isVisible(),true);assert.equal((await saved()).tasks.find(t=>t.id===ids.week).deleted_at,null);
   await q('#delete-edit-task').click();await notice('Task deleted');assert.equal(await q('#edit-dialog').isVisible(),false);
   assert.equal(await q(`#week-days [data-edit="${ids.week}"]`).count(),0);
-  // Unscheduled week previews expose the same controls.
+  // Automatically scheduled week previews expose the same controls.
   await edit(`#week-days [data-edit="${ids.scheduled}"]`);await q('#close-edit').click();
-  await q(`#week-days [data-delete-task="${ids.scheduled}"]`).click();await notice('Task deleted');
+  await q(`#week-days [data-delete-task="${ids.scheduled}"]`).first().click();await notice('Task deleted');
   if(process.env.SLOT_TEST_SCREENSHOTS)await page.screenshot({path:path.join(process.env.SLOT_TEST_SCREENSHOTS,file.replaceAll('/','-')+'-week-actions.png'),fullPage:true});
   await page.reload();await notice('Ready.');
   assert.ok((await saved()).tasks.find(t=>t.id===ids.week).deleted_at);
@@ -120,12 +120,12 @@ async function fixture(file){
   assert.equal(await single.getAttribute('aria-pressed'),'false');await single.click();
   assert.equal(await single.getAttribute('aria-pressed'),'true');assert.equal(await create('min_chunk').isDisabled(),true);
   await q('#task-form button[type=submit]').click();await notice('Task added');
-  await q('#plan').click();await notice('1 tasks scheduled');
+
   assert.equal(await q('#timeline .slot').count(),1);assert.match(await q('#timeline').innerText(),/120 minutes/);
   const longId=(await saved()).tasks.find(t=>t.name==='Single session').id;
   await edit(`#timeline [data-edit="${longId}"]`);assert.equal(await q('#edit-form [data-single-block]').getAttribute('aria-pressed'),'true');
   await q('#edit-form [data-single-block]').click();await field('min_chunk').fill('30');await field('max_chunk').fill('30');await save();
-  await q('#plan').click();await notice('1 tasks scheduled');assert.equal(await q('#timeline .slot').count(),4);
+  assert.equal(await q('#timeline .slot').count(),4);
   // Fragmented hours require two sessions, although a greedy plan could use three.
   await day('2099-04-02');await view('settings');
   const hours=async ranges=>{
@@ -138,9 +138,9 @@ async function fixture(file){
   };
   await hours([['09:00','09:30'],['10:00','10:30'],['11:00','12:00']]);await view('day');
   await create('name').fill('Auto split');await create('duration').fill('90');
-  await q('#task-form button[type=submit]').click();await notice('will be split automatically');
+  await q('#task-form button[type=submit]').click();await notice('was split automatically');
   assert.match(await q('#notice').innerText(),/2 blocks/);
-  await q('#plan').click();await notice('was split automatically');assert.equal(await q('#timeline .slot').count(),2);
+  assert.equal(await q('#timeline .slot').count(),2);
   const splitId=(await saved()).tasks.find(t=>t.name==='Auto split').id;
   await view('tasks');assert.match(await q('#tasks').innerText(),/split automatically into 2 blocks/);
   await page.reload();await notice('Ready.');await day('2099-04-02');await view('day');
@@ -149,12 +149,12 @@ async function fixture(file){
   await day('2099-04-03');await view('settings');await hours([['09:00','09:30'],['10:00','10:30']]);await view('day');
   await create('kind').selectOption('checklist');assert.equal(await single.getAttribute('aria-pressed'),'true');
   await create('duration').fill('45');await create('checklist_text').fill('Call bank');
-  await q('#task-form button[type=submit]').click();await notice('will be split automatically');
-  await q('#plan').click();await notice('was split automatically');assert.equal(await q('#timeline .slot').count(),2);
+  await q('#task-form button[type=submit]').click();await notice('was split automatically');
+  assert.equal(await q('#timeline .slot').count(),2);
   await q('#timeline [data-check-item="1"]').first().check();await notice('Checklist saved');
   assert.equal(await q('#timeline [data-check-item="1"]').nth(1).isChecked(),true);
   await q('#timeline [data-block][data-status=completed]').first().click();await notice('Work recorded');
-  await q('#plan').click();await notice('1 tasks scheduled');
+
   assert.equal(await q('#timeline [data-check-item="1"]').first().isChecked(),true);
   // Rejection preserves the draft and every saved task/block; it only recommends.
   await create('kind').selectOption('timed');await single.click();
@@ -167,11 +167,11 @@ async function fixture(file){
   // Turning checklist preference off restores manual chunk controls too.
   await create('kind').selectOption('checklist');await single.click();await q('#task-options').evaluate(d=>d.open=true);
   assert.equal(await create('min_chunk').isVisible(),true);assert.equal(await create('min_chunk').isDisabled(),false);
-  // Both split and unplaced notifications propagate from full-week generation.
-  await day('2099-04-02');await view('week');await q('#plan-week').click();await notice('7 days planned');
-  assert.match(await q('#notice').innerText(),/Auto split.*2099-04-02.*2 blocks/);
+  // Week previews and task edits reflect automatic scheduling and unplaced warnings.
+  await day('2099-04-02');await view('week');
+  assert.match(await q('#week-days').innerText(),/Auto split/);
   await edit(`#week-days [data-edit="${splitId}"]`);await field('duration').fill('600');await save();
-  await q('#plan-week').click();await notice('Recommendation: choose another date');
+  await notice('Recommendation: choose another date');
   assert.equal((await saved()).tasks.find(t=>t.id===splitId).target_date,'2099-04-02');
   assert.equal(await q('.sb-content').evaluate(el=>el.scrollWidth<=el.clientWidth+1),true);
   assert.deepEqual(errors,[]);

@@ -49,7 +49,7 @@ for (const file of ['Slot/Slot.html', 'StudyBuddy.html']) {
     const fetched=await C.dispatch(db,`/api/tasks/${id}`);
     for(const [key,value] of Object.entries(patch))assert.equal(fetched[key],value,key);
     assert.equal(fetched.completed_minutes,0);assert.equal(fetched.remaining_minutes,90);
-    assert.equal(db.blocks.length,0);assert.equal(C.snapshot(db,'2026-11-02').tasks.length,0);
+    assert.equal(db.blocks.length,2);assert.ok(db.blocks.every(b=>b.day==='2026-11-04'));assert.equal(C.snapshot(db,'2026-11-02').tasks.length,0);
     C.updateTask(db,id,{kind:'checklist',checklist:[{id:1,text:'Item',done:true}]});
     assert.equal(db.tasks[0].name,'Revised');assert.equal(db.tasks[0].single_block,true);assert.equal(db.tasks[0].max_chunk,90);
     await C.planDay(db,'2026-11-04');assert.equal(db.blocks.length,1);
@@ -111,8 +111,8 @@ for (const file of ['Slot/Slot.html', 'StudyBuddy.html']) {
   test(`${file}: creation previews splits, week generation reports them, checklist progress is shared`, async () => {
     const db=C.empty();C.setWindows(db,'2026-11-02',[[540,560],[600,620],[660,680],[720,760]]);
     const result=await C.dispatch(db,'/api/tasks','POST',task({kind:'checklist',duration:70,checklist:[{id:1,text:'Call',done:true}]}));
-    assert.equal(result.notices[0].blocks,3);assert.match(result.notices[0].message,/will be split/);
-    assert.equal(db.blocks.length,0); // Creation checks feasibility; Generate applies the plan.
+    assert.equal(result.notices[0].blocks,3);assert.match(result.notices[0].message,/was split automatically/);
+    assert.equal(db.blocks.length,3); // Creation immediately applies the plan.
     const week=await C.planWeek(db,'2026-11-02');assert.equal(week.notices[0].blocks,3);
     const blocks=db.blocks.filter(b=>b.task_id===result.id);assert.equal(blocks.length,3);
     C.setBlockStatus(db,blocks[0].id,'completed');const done=C.completedMinutes(db,result.id);

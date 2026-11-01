@@ -1,153 +1,122 @@
 # Slot
 
-A local-first day and week planner that turns tasks, deadlines, and available hours into structured schedules.
+A local-first day and week planner that keeps tasks, deadlines, and available time in a current schedule.
 
-Slot answers a practical question: **Where does everything fit?**
+## Getting started
 
-Describe timed tasks with their durations, or reserve a checklist block for a collection of to-dos without estimating each item. Slot searches for valid placements around your existing commitments.
+1. Download `Slot.html` and open it in a modern browser.
+2. Set available hours and fixed commitments in **Settings**.
+3. Add timed tasks or checklist blocks with a duration and deadline.
+4. Follow the automatically updated Day or Week schedule.
 
-The result is an actionable schedule built around real constraints.
+No installation, account, server, or Generate button is required. The default usable window is 09:00–17:00. All times and day boundaries use the browser's local time zone.
 
-## Features
+## Automatic scheduling
 
-- **Automatic scheduling:** Generate work blocks from tasks and available time.
-- **Day and week views:** Plan individual dates or seven consecutive days.
-- **Deadline awareness:** Schedule work before its specified deadline.
-- **Task priorities:** Classify work as high, medium, or low priority.
-- **Energy classification:** Distinguish deep work from lighter tasks.
-- **Flexible task splitting:** Configure minimum and maximum work-block durations.
-- **Single-block control:** Request one session for either task type; automatically fall back to the fewest sessions that fit, with notifications and recommendations when work cannot fit.
-- **Checklist blocks:** Group checkable to-dos under a total time budget with no per-item estimates; checkmarks stay shared if the block needs multiple sessions.
-- **Recurring commitments:** Reserve fixed time on selected weekdays, every weekday, or every day; edit every property or delete the entire series.
-- **Custom working hours:** Define multiple usable windows per day.
-- **Progress tracking:** Complete or skip scheduled blocks.
-- **Task management:** Edit every task setting or delete tasks directly from schedules, Week previews, Upcoming, Tasks, and skipped history; restore deleted work from Trash.
-- **JSON backups:** Export and restore application data.
+Saving a task, deadline, priority, duration, commitment, or availability change automatically recalculates schedules. Adding, deleting, restoring, completing, or skipping work also updates the plan. The selected date and view stay in place during edits. Skipped intervals stay clear during automatic retries. **Refresh day** is optional; routine planning needs no manual trigger.
 
-## Getting Started
+Ordinary tasks keep their assigned date. Higher priorities are considered first, with deadlines breaking priority ties. The deterministic scheduler respects available windows, fixed commitments, completed work, kept times, deadlines, and chunk constraints. It searches for verified placements within a bounded search budget and reports insufficient capacity, incompatible chunks, or uncertainty rather than hiding unscheduled work. It does not claim globally optimal schedules.
 
-1. Download `Slot.html`.
-2. Open it in a modern browser.
-3. Select the date you want to plan.
-4. Add timed tasks or checklist blocks with a total duration and deadline.
-5. Open **Settings** to configure available hours.
-6. Add fixed commitments.
-7. Click **Generate Schedule**.
+### Keeping manual placements
 
-Slot attempts to assign your work to available periods without overlapping fixed commitments or completed work.
+Choose **Adjust / keep time** on an unfinished block. Set a different start time or save its current one; the duration stays unchanged. The scheduler reserves that placement and schedules other work around it. Choose **Release time** to return it to automatic placement.
 
-The default usable window is 09:00–17:00.
+A new manual placement must be within available hours and clear of commitments, completed work, and other kept blocks. If a later availability, commitment, or deadline change creates a conflict, the kept block stays in place with a warning. Adjust or release it to resolve the conflict. Release a task's kept times before changing its date, duration, type, or chunk limits. Deleting or skipping a task intentionally removes its unfinished placements.
 
-## Creating Tasks
+## Unfinished-task rollover
 
-Timed tasks have a custom name; checklist blocks are automatically named **Checklist Block**. Both include an assigned date, total duration, deadline, priority, and energy classification.
+At a new local day, unfinished work from earlier dates moves into the next feasible available periods. This includes uncompleted or skipped work; completed and deleted tasks do not roll forward. Remaining work can span several dates and uses existing chunk rules. Assigned work and kept times reserve capacity first.
 
-Advanced options allow you to specify chunk limits.
+Original deadlines never change during rollover. Slot reserves available chunks before the deadline, then places excess work in the earliest remaining periods and flags it with a deadline warning. Work for which no placement can be verified remains visibly unslotted. Checklist checkmarks, completed minutes, and historical block times/labels survive.
 
-For example:
+Rollover checks every 30 seconds while the page runs and catches up on reopening, window focus, visibility changes, or returning to Slot in StudyBuddy. If you were viewing Today when midnight passed, the view advances to the new day. A closed HTML file cannot execute background work; the next opening performs catch-up. Repeated checks do not duplicate task instances or completion history.
 
-| Property | Value |
+Catch-up searches up to 90 days and can schedule partial remaining work while flagging the rest. Multi-day rollover uses a bounded chronological chunk search; it does not promise the fewest sessions across all days.
+
+## Creating and managing tasks
+
+Timed tasks have a custom name. Checklist blocks start as **Checklist Block** and can be renamed in the editor. Both support an assigned date, duration, local deadline, priority, energy classification, and chunk preferences. Bulk entry accepts one comma-separated task per line, with quoted names when necessary and optional minimum/maximum chunks.
+
+Use **Edit** or **Delete** in Day, Week previews, Tasks, Upcoming, or skipped history. The editor exposes every task setting and checklist contents/checkmarks. Saving updates the schedule immediately; Cancel discards the draft. Editing an individual recurring occurrence creates an exception that later series edits preserve.
+
+Completed tasks remain editable and deletable. Their completed blocks retain their original times and labels. Duration cannot fall below completed minutes; increasing it reopens remaining work. **Delete** moves a task to **Tasks → Trash**, removing unfinished blocks while keeping completed history. **Restore task** brings it back and schedules its unfinished work automatically. Restoring old unfinished work also invokes rollover when necessary.
+
+### Single block
+
+**Single block · On/Off** requests an uninterrupted session without requiring manual chunk arithmetic. It starts off for timed tasks and on for checklist blocks. With it on, the scheduler tries one session first and then searches for the fewest sessions it can verify for the assigned day. Notifications report splits and unplaced work. With it off, manual minimum/maximum chunks apply.
+
+Adding a one-off task with Single block on checks feasibility before saving and immediately applies a verified plan. If no reliable placement is found, the task is not added, its draft remains, and saved data and IDs stay intact. Existing tasks and recurring instances that cannot fit remain visible with reasons. Completed minutes are protected, and preferences apply to the remaining work.
+
+### Checklist blocks
+
+Choose **Checklist block**, set its total duration, and enter one to-do per line. Individual items need no duration estimate. Check items directly in Day or Tasks; use **Edit** to add, remove, rename, or check them.
+
+Sessions of the same task share checkmarks. Each recurring occurrence receives its own unchecked copy of the list. Item progress and completed time are independent: checking the last item does not record minutes, and completing a work block does not check remaining items. Checkmarks persist through reloads, automatic planning, rollover, and Trash restoration.
+
+## Recurring tasks
+
+Enable **Repeat task weekly** when adding a timed task or checklist block. Select individual weekdays, **Weekdays**, or **Every day**. For example, enter mathematics, 45 minutes, and Monday through Friday once.
+
+The assigned date anchors the series. Each occurrence receives the same duration, priority, energy, chunk preferences, and checklist template. Its deadline uses the same local time and calendar-day offset from its occurrence date as the original task. Deadlines must be after the occurrence's start and within 366 days. Date arithmetic uses calendar days rather than fixed elapsed hours, including daylight-saving transitions.
+
+Slot materializes a rolling 35-day horizon plus any selected future week. Opening later extends the horizon and catches up ungenerated active days since the previous horizon; occurrence identities prevent duplicates. Future instances are generated even if they cannot fit, so capacity problems stay visible. Limits are 100 series, 100 ordinary unfinished tasks per date, and 20,000 total tasks. A limit or storage failure leaves the previous saved state intact.
+
+Under **Tasks → Recurring tasks**:
+
+- **Edit recurring task** changes the task template, start date, deadline, weekdays, or paused state.
+- **Pause** withdraws untouched occurrences from today onward and stops generation.
+- **Resume** restarts from today, without backfilling deliberately paused days.
+
+Changes apply to untouched occurrences from today onward. Completed instances, recorded/skipped work, checked items, individually edited occurrences, kept times, and deleted instances remain intact. Pausing retains those existing exceptions and their history. Historical occurrences are never rewritten. Deleting one occurrence affects only that occurrence; pause the rule to stop future work.
+
+## Permanent weekday availability
+
+Open **Settings → Weekday availability**, choose weekdays, and add usable windows. Save once for permanent rules—for example, Monday through Friday, 18:00–20:00. An empty window list is a permanent day off. **Edit hours** loads a rule for editing; **Reset to default** removes it and restores the default 09:00–17:00 fallback.
+
+**Usable hours** remains available for date-specific exceptions. **Use these hours for all 7 days** saves seven explicit date overrides. **Use weekday rule** removes the selected date's override.
+
+Availability precedence is:
+
+| Source | When it applies |
 |---|---|
-| Name | Study algorithms |
-| Duration | 120 minutes |
-| Priority | High |
-| Energy | Deep |
-| Minimum chunk | 25 minutes |
-| Maximum chunk | 60 minutes |
-| Deadline | 17:00 |
+| Date-specific hours, including an empty day-off override | The exact date has an override |
+| Permanent weekday rule | No date override exists and that weekday has a rule |
+| Default 09:00–17:00 | Neither exists |
 
-Slot can split this work into several valid blocks rather than requiring one uninterrupted session.
+Multiple windows allow split days; end time may be 24:00. Changes automatically update schedules while keeping completed work and manual placements.
 
-Tasks can also be entered in bulk using comma-separated fields.
+## Fixed and recurring commitments
 
-### Single Block
+Under **Settings → Fixed commitments → Add a commitment**, enter Name, Starts, and Ends. Leave **Repeat weekly** off for a one-off appointment, or enable it and choose weekday tiles, **Weekdays**, or **Every day**.
 
-Use the **Single block · On/Off** button when creating or editing a timed task or checklist block. It starts off for timed tasks and on for checklist blocks. Turning it on replaces manual minimum/maximum chunk settings with automatic session planning; you do not need to match the minimum chunk to the task's full duration. Turn it off to use manual chunk settings for either task type.
+Repetition begins on or after Starts and preserves local start time and duration. Set Ends to the next date for overnight commitments; both sides of midnight are protected. Rules remain manageable in Settings even on off-days. **Edit** changes the entire series; turning repetition off converts it to a one-off. **Delete series** removes the rule and its occurrences.
 
-The scheduler first tries to keep each single-block request in one uninterrupted session. If that is impossible around hours, commitments, deadlines, completed work, and other admitted tasks, it searches for the fewest total sessions for these requests. A notification names each split task, its date, and the resulting session lengths. The bounded search must find a valid placement; reaching its limit is reported as uncertainty rather than silently placing unreliable work.
+Commitments cannot overlap each other or completed work, including future recurring occurrences. Changes automatically place unfinished work around the updated commitments. Kept times remain fixed and show conflicts when necessary.
 
-When adding a task with Single block on, Slot checks the current date's constraints before saving. If a split is necessary, the notification previews it; **Generate schedule** applies the plan. If no reliable fit is found, creation is rejected without changing saved tasks, schedules, or IDs. Your form draft remains, and the notification recommends choosing another date with enough free time. It does not move the task or change dates for you.
+## Storage and backups
 
-After edits or availability changes, generate the day or week again. Notifications also report splits and unplaced work during generation. Existing tasks that cannot fit remain unslotted for you to edit or move. A task's split explanation is also shown in the Tasks list after scheduling. Completed minutes stay protected; the preference applies to its remaining work.
+The standalone app has no runtime server requirement and saves in browser `localStorage`. Keep using the same browser profile and file location. Export backups regularly before moving devices, clearing storage, or importing another backup.
 
-### Checklist Blocks
+**Settings → Backups & storage** exports JSON containing all tasks, recurrence rules and occurrence identities, completion/checklist history, commitments, permanent weekday hours, date overrides, manual placements, rollover metadata, and ID sequences. Current Slot and StudyBuddy backups are interchangeable. Older backups load with empty task recurrence and weekday-rule collections; older task preferences and one-off commitments remain compatible.
 
-Choose **Checklist block** in the **Task type** menu. The task name field disappears and the block starts as **Checklist Block**. Choose its total duration and enter one to-do per line. The name field returns when you select **Timed task**. After creation, **Edit** lets you rename checklist blocks too. You can also create an empty block and add its items later. Individual items never require duration estimates. Timed tasks and checklist blocks can coexist on the same day.
-
-Checklist blocks start with Single block on and use the same single-session attempt, automatic fallback, and cannot-fit notifications as timed tasks. If split, every session shows the same checklist and checkmarks. Turning Single block off enables manual chunk settings. Item duration estimates are never required.
-
-Check or uncheck items directly in **Your schedule** or **Tasks**. **Edit** lets you add, rename, remove, and check items, and edit the block's other properties. Checkmarks save immediately in the schedule and Tasks view; changes inside the edit dialog save with **Save changes**. They survive reloads, regeneration, skipping, pushing unfinished work to tomorrow, and Trash restoration.
-
-Item progress and time progress are independent: checking the last item does not record the block's minutes as completed, and completing a block does not check its remaining items. Use the block's **Complete** control to record its scheduled time.
-
-## Fixed and Recurring Commitments
-
-Open **Settings → Fixed commitments → Add a commitment** and enter a name, Starts, and Ends. Leave **Repeat weekly** off for a one-off appointment.
-
-For a recurring commitment, enable **Repeat weekly** and check the weekday tiles. **Weekdays** selects Monday through Friday; **Every day** selects all seven days. At least one day is required. Repetition starts on or after the Starts date and continues on the selected weekdays at the same local time and duration. For an overnight commitment, set Ends to the following date. Both sides of midnight are protected.
-
-Recurring commitments appear in future day and week schedules automatically, without re-entry. All recurring rules remain visible in Settings even when they do not occur on the selected date.
-
-Use **Edit** to change the name, start date and time, end date and time, repeat days, or whether it repeats. Changes apply to the whole series. Turn off repetition to convert a series to a one-off. **Delete series** removes the rule and all its occurrences entirely.
-
-Commitments cannot overlap each other or completed work, including future recurring occurrences. Adding, editing, or deleting a commitment clears affected unfinished schedules across saved dates. Generate the day or week again to place work around the new commitments; completed history stays intact.
-
-## Scheduling Engine
-
-Slot uses a deterministic, bounded search algorithm.
-
-It considers available windows, commitments, completed blocks, deadlines, priorities, and chunk constraints.
-
-Higher-priority tasks are considered first, with deadlines breaking priority ties.
-
-The scheduler searches for feasible placements. It does not claim to produce globally optimal schedules.
-
-When a task cannot be placed, Slot reports a reason, such as insufficient capacity, incompatible chunk constraints, or a search limit.
-
-Unscheduled work remains visible rather than disappearing.
-
-Generating a week schedules seven days while preserving each task's assigned date.
-
-## Managing Progress
-
-Scheduled blocks can be marked completed or skipped.
-
-Completed blocks remain part of the historical record and are protected from subsequent scheduling changes.
-
-### Editing and Deleting Any Task
-
-Use **Edit** or **Delete** beside a task in the day schedule, Week preview, Tasks list, Upcoming list, or skipped-block history. These controls work for timed tasks and checklist blocks, whether unscheduled, scheduled, skipped, partially completed, or completed. If a Week preview is shortened, **Open day** provides access to the rest of that day's tasks.
-
-**Edit** opens the same dialog everywhere. Change the name, task type, assigned date, total duration, deadline, priority, energy, single-block preference, manual minimum/maximum chunks when the preference is off, or checklist items and their checkmarks. **Save changes** persists the edit while keeping your selected date and view; **Cancel** discards the draft. Upcoming tasks can be edited directly even when their date is outside the displayed week.
-
-Renaming or editing checklist items keeps planned blocks. Changes to timing, type, priority, energy, or chunk limits clear affected unfinished schedules; generate the day or week again to apply them. Moving a task preserves completed and skipped history on its original dates.
-
-Completed tasks can still be edited or deleted. Their recorded work keeps its original times and labels. Total duration cannot be reduced below completed minutes; increasing a completed task's duration reopens its remaining work. Use the existing Complete, Skip, and Restore controls to manage task progress.
-
-**Delete** is also available inside the edit dialog. It removes unfinished scheduled blocks and moves the task to **Tasks → Trash**. **Restore task** returns it with its saved properties and checklist progress; completed history remains available throughout. Generate a schedule again to place restored unfinished work.
-
-You can also push unfinished work to tomorrow or regenerate schedules after changing availability.
-
-The dashboard displays scheduled minutes, usable minutes, daily utilization, and unslotted work.
-
-## Storage and Privacy
-
-Slot is a standalone HTML application with no runtime server requirement.
-
-It stores tasks, schedules, commitments, and history in browser `localStorage`.
-
-Exported JSON backups contain all dates, work history, single-block preferences, checklist items and checkmarks, and recurring rules. Current standalone Slot and StudyBuddy backups are interchangeable. Existing saved data and older backups still load: timed tasks keep their chunk settings, and checklist blocks default to preferring one session with automatic fallback. Existing commitments remain one-off until you choose repeat days.
-
-Keep backups before clearing browser data, moving the HTML file, or switching devices.
-
-## Design Philosophy
-
-Slot emphasizes constraint-aware planning over decorative calendar management.
-
-Its dark interface, clear typography, task controls, and compact timeline support deliberate daily execution.
-
-**Planning is valuable only when the resulting schedule is realistic enough to execute.**
+Import validates records, references, chronology, overlaps, and progress before replacing saved data. Intentional manual-placement conflicts are retained so they can be resolved in the UI. Writes use a browser storage lock where available and an optimistic check to prevent stale-tab overwrites. Storage failures leave the prior saved data intact. Other tabs refresh after successful saves.
 
 ## Validation
 
-Run `node --test tests/slot-core.test.cjs` from the repository root for planner, minimum-session fallback, atomic creation, task lifecycle, backup, and bundled/standalone parity checks. With Playwright and Chromium available, run `node tests/slot-ui.cjs` and `node tests/slot-task-ui.cjs` to exercise both apps, including single-block controls, split/rejection notifications, task management across views, completed history, restoration, persistence, and mobile layout. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for a custom Chromium executable.
+From the repository root, run:
+
+```sh
+node --test tests/*.test.cjs
+```
+
+This covers the planner, task lifecycle, automatic scheduling, multi-day rollover, deadlines, preserved manual times, recurrence editing/pause/history, availability precedence, backup migration/corruption, and parity between standalone Slot and StudyBuddy's bundled Slot.
+
+With Playwright and Chromium available, run:
+
+```sh
+node tests/slot-ui.cjs
+node tests/slot-task-ui.cjs
+node tests/slot-automation-ui.cjs
+```
+
+Browser checks exercise both apps, existing task/checklist/commitment controls, automatic updates, recurring tasks, kept-time conflicts, weekday rules, exports, reloads, simulated midnight rollover in America/Chicago, and mobile layout. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for a custom Chromium executable and `SLOT_TEST_SCREENSHOTS` for optional screenshots.

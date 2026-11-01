@@ -16,7 +16,8 @@ The result is an actionable schedule built around real constraints.
 - **Task priorities:** Classify work as high, medium, or low priority.
 - **Energy classification:** Distinguish deep work from lighter tasks.
 - **Flexible task splitting:** Configure minimum and maximum work-block durations.
-- **Checklist blocks:** Reserve one uninterrupted block with checkable to-dos and no per-item time estimates.
+- **Single-block control:** Request one session for either task type; automatically fall back to the fewest sessions that fit, with notifications and recommendations when work cannot fit.
+- **Checklist blocks:** Group checkable to-dos under a total time budget with no per-item estimates; checkmarks stay shared if the block needs multiple sessions.
 - **Recurring commitments:** Reserve fixed time on selected weekdays, every weekday, or every day; edit every property or delete the entire series.
 - **Custom working hours:** Define multiple usable windows per day.
 - **Progress tracking:** Complete or skip scheduled blocks.
@@ -59,11 +60,21 @@ Slot can split this work into several valid blocks rather than requiring one uni
 
 Tasks can also be entered in bulk using comma-separated fields.
 
+### Single Block
+
+Use the **Single block · On/Off** button when creating or editing a timed task or checklist block. It starts off for timed tasks and on for checklist blocks. Turning it on replaces manual minimum/maximum chunk settings with automatic session planning; you do not need to match the minimum chunk to the task's full duration. Turn it off to use manual chunk settings for either task type.
+
+The scheduler first tries to keep each single-block request in one uninterrupted session. If that is impossible around hours, commitments, deadlines, completed work, and other admitted tasks, it searches for the fewest total sessions for these requests. A notification names each split task, its date, and the resulting session lengths. The bounded search must find a valid placement; reaching its limit is reported as uncertainty rather than silently placing unreliable work.
+
+When adding a task with Single block on, Slot checks the current date's constraints before saving. If a split is necessary, the notification previews it; **Generate schedule** applies the plan. If no reliable fit is found, creation is rejected without changing saved tasks, schedules, or IDs. Your form draft remains, and the notification recommends choosing another date with enough free time. It does not move the task or change dates for you.
+
+After edits or availability changes, generate the day or week again. Notifications also report splits and unplaced work during generation. Existing tasks that cannot fit remain unslotted for you to edit or move. A task's split explanation is also shown in the Tasks list after scheduling. Completed minutes stay protected; the preference applies to its remaining work.
+
 ### Checklist Blocks
 
 Choose **Checklist block** in the **Task type** menu. The task name field disappears and the block starts as **Checklist Block**. Choose its total duration and enter one to-do per line. The name field returns when you select **Timed task**. After creation, **Edit** lets you rename checklist blocks too. You can also create an empty block and add its items later. Individual items never require duration estimates. Timed tasks and checklist blocks can coexist on the same day.
 
-The scheduler places a checklist block as one uninterrupted reservation around the same hours, deadlines, priorities, and commitments as normal tasks. Chunk settings apply to timed tasks only. If the block cannot fit, it remains visibly unslotted.
+Checklist blocks start with Single block on and use the same single-session attempt, automatic fallback, and cannot-fit notifications as timed tasks. If split, every session shows the same checklist and checkmarks. Turning Single block off enables manual chunk settings. Item duration estimates are never required.
 
 Check or uncheck items directly in **Your schedule** or **Tasks**. **Edit** lets you add, rename, remove, and check items, and edit the block's other properties. Checkmarks save immediately in the schedule and Tasks view; changes inside the edit dialog save with **Save changes**. They survive reloads, regeneration, skipping, pushing unfinished work to tomorrow, and Trash restoration.
 
@@ -107,7 +118,7 @@ Completed blocks remain part of the historical record and are protected from sub
 
 Use **Edit** or **Delete** beside a task in the day schedule, Week preview, Tasks list, Upcoming list, or skipped-block history. These controls work for timed tasks and checklist blocks, whether unscheduled, scheduled, skipped, partially completed, or completed. If a Week preview is shortened, **Open day** provides access to the rest of that day's tasks.
 
-**Edit** opens the same dialog everywhere. Change the name, task type, assigned date, total duration, deadline, priority, energy, minimum/maximum chunks for timed tasks, or checklist items and their checkmarks. Checklist blocks always reserve one uninterrupted block, so their chunk limits follow their remaining duration. **Save changes** persists the edit while keeping your selected date and view; **Cancel** discards the draft. Upcoming tasks can be edited directly even when their date is outside the displayed week.
+**Edit** opens the same dialog everywhere. Change the name, task type, assigned date, total duration, deadline, priority, energy, single-block preference, manual minimum/maximum chunks when the preference is off, or checklist items and their checkmarks. **Save changes** persists the edit while keeping your selected date and view; **Cancel** discards the draft. Upcoming tasks can be edited directly even when their date is outside the displayed week.
 
 Renaming or editing checklist items keeps planned blocks. Changes to timing, type, priority, energy, or chunk limits clear affected unfinished schedules; generate the day or week again to apply them. Moving a task preserves completed and skipped history on its original dates.
 
@@ -125,7 +136,7 @@ Slot is a standalone HTML application with no runtime server requirement.
 
 It stores tasks, schedules, commitments, and history in browser `localStorage`.
 
-Exported JSON backups contain all dates, work history, checklist items and checkmarks, and recurring rules. Current standalone Slot and StudyBuddy backups are interchangeable. Existing saved data and older backups still load; existing commitments remain one-off until you choose repeat days.
+Exported JSON backups contain all dates, work history, single-block preferences, checklist items and checkmarks, and recurring rules. Current standalone Slot and StudyBuddy backups are interchangeable. Existing saved data and older backups still load: timed tasks keep their chunk settings, and checklist blocks default to preferring one session with automatic fallback. Existing commitments remain one-off until you choose repeat days.
 
 Keep backups before clearing browser data, moving the HTML file, or switching devices.
 
@@ -139,4 +150,4 @@ Its dark interface, clear typography, task controls, and compact timeline suppor
 
 ## Validation
 
-Run `node --test tests/slot-core.test.cjs` from the repository root for planner, task lifecycle, backup, and bundled/standalone parity checks. With Playwright and Chromium available, run `node tests/slot-ui.cjs` and `node tests/slot-task-ui.cjs` to exercise both apps, including editing/deleting across views, completed history, restoration, persistence, and mobile layout. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for a custom Chromium executable.
+Run `node --test tests/slot-core.test.cjs` from the repository root for planner, minimum-session fallback, atomic creation, task lifecycle, backup, and bundled/standalone parity checks. With Playwright and Chromium available, run `node tests/slot-ui.cjs` and `node tests/slot-task-ui.cjs` to exercise both apps, including single-block controls, split/rejection notifications, task management across views, completed history, restoration, persistence, and mobile layout. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for a custom Chromium executable.
